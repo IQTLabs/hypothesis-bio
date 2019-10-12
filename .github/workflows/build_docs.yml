@@ -10,10 +10,7 @@ jobs:
       - uses: actions/setup-python@v1
         with:
           python-version: "3.x"
-      - run: cd docs
-      - run: npm install
-      - run: pip install -r requirements.txt
-      - run: npm run build
+      - run: cd docs && pip install -r requirements.txt && npm install && npm run build
       - name: deploy
         uses: peaceiris/actions-gh-pages@v2.5.0
         env:
