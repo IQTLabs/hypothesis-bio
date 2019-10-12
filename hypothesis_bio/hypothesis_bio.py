@@ -2,8 +2,9 @@
 
 """Main module."""
 
-from hypothesis.strategies import composite, text, characters
+from hypothesis.strategies import composite, text, characters, sampled_from
 from hypothesis import assume
+from .utilities import ambiguous_start_codons, ambiguous_stop_codons
 
 
 @composite
@@ -17,25 +18,62 @@ def dna(draw, allow_ambiguous=True, uppercase_only=False, min_size=0, max_size=N
 
 
 @composite
-def cds(draw, sequence_source=dna(), **kwargs):
-    if kwargs:
-        sequence_source = dna(**kwargs)
-    sequence_source = draw(sequence_source)
-    assume(len(sequence_source) % 3 == 0)
-    return sequence_source
+def cds(draw, allow_ambiguous=True, uppercase_only=False, min_size=0, max_size=None):
+
+    # we use the same arguments as dna(), since a CDS will be a DNA sequence
+    # we don't use kwargs to enable better autocompletion for developer ergonomics
+    sequence = draw(
+        dna(
+            allow_ambiguous=allow_ambiguous,
+            uppercase_only=uppercase_only,
+            min_size=min_size,
+            max_size=max_size,
+        )
+    )
+
+    # ensure the sequence is divisible into codons
+    assume(len(sequence) % 3 == 0)
+
+    # remove start/stop codons that aren't at the beginning/end
+    for codon in range(3, len(sequence) - 3, 3):
+        assume(sequence[codon : codon + 3].upper() not in ambiguous_start_codons)
+        assume(sequence[codon : codon + 3].upper() not in ambiguous_stop_codons)
+
+    # if we do have a sequence (aka not ''), make sure it has a start and stop codon
+    if sequence:
+        if allow_ambiguous:
+            sequence = (
+                draw(sampled_from(ambiguous_start_codons))
+                + sequence
+                + draw(sampled_from(ambiguous_stop_codons))
+            )
+        else:
+            sequence = "ATG" + sequence + draw(sampled_from(["TAA", "TAG", "TGA"]))
+
+    return sequence
 
 
 @composite
-def fasta(
+def parsed_fasta(
     draw,
     comment_source=text(alphabet=characters(min_codepoint=32, max_codepoint=126)),
     sequence_source=dna(),
     **kwargs
-):
+) -> dict:
     """Generate strings representing sequences in FASTA format.
     """
     if kwargs:
         sequence_source = dna(**kwargs)
     comment = draw(comment_source)
     assume("\\n" not in comment)
-    return ">" + comment + "\n" + draw(sequence_source)
+    sequence = draw(sequence_source)
+    return {
+        "fasta": ">" + comment + "\n" + sequence,
+        "comment": comment,
+        "sequence": sequence,
+    }
+
+
+@composite
+def fasta(draw):
+    return draw(parsed_fasta())["fasta"]

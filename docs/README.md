@@ -1,3 +1,1 @@
-# Title Goes Here
-
-Hello, world!
+../README.md
