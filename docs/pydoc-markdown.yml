@@ -1,0 +1,11 @@
+loaders:
+  - type: python
+    modules: [hypothesis_bio]
+    search_path: [../hypothesis_bio]
+processors:
+  - type: pydocmd
+  - type: filter
+    code_lang: true
+renderer:
+  type: markdown
+  render_toc: false

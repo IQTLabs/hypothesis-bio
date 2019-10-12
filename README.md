@@ -1,3 +1,3 @@
-# hypothesis_bio
+# Welcome to Hypothesis-Bio!
 
 Hypothesis extension for computational biology

@@ -103,3 +103,6 @@ ENV/
 
 # ignore vscode
 .vscode
+
+# ignore node modules
+docs/node_modules/
