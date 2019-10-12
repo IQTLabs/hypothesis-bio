@@ -1,6 +1,7 @@
 module.exports = {
   title: "Hypothesis-Bio",
   description: "Just playing around",
+  base: "/hypothesis_bio/"
   themeConfig: {
     nav: [
       { text: "Home", link: "/" },
