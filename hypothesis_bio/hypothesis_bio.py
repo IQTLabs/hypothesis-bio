@@ -2,7 +2,7 @@
 
 """Main module."""
 
-from hypothesis.strategies import composite, text
+from hypothesis.strategies import composite, text, characters
 from hypothesis import assume
 
 
@@ -23,3 +23,19 @@ def cds(draw, sequence_source=dna(), **kwargs):
     sequence_source = draw(sequence_source)
     assume(len(sequence_source) % 3 == 0)
     return sequence_source
+
+
+@composite
+def fasta(
+    draw,
+    comment_source=text(alphabet=characters(min_codepoint=32, max_codepoint=126)),
+    sequence_source=dna(),
+    **kwargs
+):
+    """Generate strings representing sequences in FASTA format.
+    """
+    if kwargs:
+        sequence_source = dna(**kwargs)
+    comment = draw(comment_source)
+    assume("\\n" not in comment)
+    return ">" + comment + "\n" + draw(sequence_source)
