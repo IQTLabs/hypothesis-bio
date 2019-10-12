@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-python@v1
         with:
           python-version: "3.x"
-      - run: cd docs && pip install -r requirements.txt && npm install && npm run build && cp .vuepress/dist ../dist
+      - run: cd docs && pip install -r requirements.txt && npm install && npm run build && cp -r .vuepress/dist ../dist
       - name: deploy
         uses: peaceiris/actions-gh-pages@v2.5.0
         env:
