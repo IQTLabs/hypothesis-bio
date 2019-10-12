@@ -7,5 +7,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.x"
       - run: cd docs
       - run: npm install
+      - run: pip install -r requirements.txt
+      - run: npm run build
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v2.5.0
+        env:
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: docs/dist
