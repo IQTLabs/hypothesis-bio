@@ -32,7 +32,7 @@ def test_gc_content(seq):
     assert 0 <= gc_content(seq) <= 1
 ```
 
-When we run the test, we get the following output:
+When we run the test (by calling `test_gc_content`), we get the following output:
 
 ```python
 Falsifying example: test_gc_content(seq='')
@@ -164,3 +164,40 @@ KeyError: 'A'
 We now see another bug, in which a sequence whose length isn't divisible by 3 will result in a KeyError since there'll be a partial codon.
 Gaps and ambiguous bases and lowercase letters, oh my!
 Thankfully, Hypothesis-Bio will generate all of these weird edge cases so you don't manually have to.
+
+## Installation
+
+Hypothesis-Bio will be available from PyPI via
+
+```
+pip install hypothesis-bio
+```
+
+And Conda using:
+
+```
+conda install -c [CHANNEL GOES HERE] hypothesis-bio
+```
+
+## Documentation
+
+The documentation for Hypothesis-Bio are available [here](https://lab41.github.io/hypothesis-bio/).
+
+## Citation
+
+If you use Hypothesis-Bio, please cite it as:
+
+```
+
+```
+
+or, for BibTeX:
+
+```
+@misc{hypothesis_bio,
+    author       = {Benjamin Lee},
+    title        = {{Hypothesis-Bio}},
+    publisher    = {GitHub},
+    url          = {https://github.com/Lab41/hypothesis-bio}
+    }
+```
