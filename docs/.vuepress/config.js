@@ -8,6 +8,7 @@ module.exports = {
     activeHeaderLinks: true,
     nav: [
       { text: "Home", link: "/" },
+      { text: "Contribute", link: "/contributing" },
       { text: "API Reference", link: "/api" },
       { text: "GitHub", link: "https://github.com/Lab41/hypothesis-bio" }
     ]
