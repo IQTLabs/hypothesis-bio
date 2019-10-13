@@ -41,7 +41,16 @@ The documentation is contained in:
 
 ### Add new strategies
 
+The heart of Hypothesis-Bio are its strategies, the functions that generate examples that are used for testing.
+If you have a biological data type or format that isn't represented in Hypothesis-Bio, we'd love you to contribute it via a pull request.
+For information about how to write a strategy, take a look at [Hypothesis's documentation on composite strategies](https://hypothesis.readthedocs.io/en/latest/data.html#composite-strategies) as well as the source code for examples.
+If you need any help, please don't hesitate to reach out.
+
 ### Add unit tests
+
+In order to ensure that the software is correct, we rely on unit testing.
+All code (new and existing) should have unit tests.
+We use [pytest](https://pytest.org/en/latest/) for our testing and all tests must pass before merging a pull request is allowed.
 
 ## How to contribute
 
