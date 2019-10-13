@@ -5,12 +5,12 @@ module.exports = {
   plugins: ["@vuepress/last-updated"],
   themeConfig: {
     sidebar: "auto",
+    repo: "Lab41/hypothesis-bio",
     smoothScroll: true,
     nav: [
       { text: "Home", link: "/" },
       { text: "Contribute", link: "/contributing" },
-      { text: "API Reference", link: "/api" },
-      { text: "GitHub", link: "https://github.com/Lab41/hypothesis-bio" }
+      { text: "API Reference", link: "/api" }
     ]
   }
 }
