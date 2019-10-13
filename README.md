@@ -167,7 +167,7 @@ Thankfully, Hypothesis-Bio will generate all of these weird edge cases so you do
 
 ## Installation
 
-Hypothesis-Bio will be available from PyPI via
+Hypothesis-Bio will be available from PyPI via:
 
 ```
 pip install hypothesis-bio
