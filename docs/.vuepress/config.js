@@ -2,7 +2,10 @@ module.exports = {
   title: "Hypothesis-Bio",
   description: "Just playing around",
   base: "/hypothesis-bio/",
+  plugins: ["@vuepress/last-updated", "@vuepress/active-header-links"],
   themeConfig: {
+    sidebar: "auto",
+    activeHeaderLinks: true,
     nav: [
       { text: "Home", link: "/" },
       { text: "API Reference", link: "/api" },
