@@ -1,11 +1,11 @@
 module.exports = {
   title: "Hypothesis-Bio",
-  description: "Just playing around",
+  description: "Property-Based Testing for Biology",
   base: "/hypothesis-bio/",
-  plugins: ["@vuepress/last-updated", "@vuepress/active-header-links"],
+  plugins: ["@vuepress/last-updated"],
   themeConfig: {
     sidebar: "auto",
-    activeHeaderLinks: true,
+    smoothScroll: true,
     nav: [
       { text: "Home", link: "/" },
       { text: "Contribute", link: "/contributing" },
