@@ -11,9 +11,7 @@ Let's look at some example code that calculates [GC-content](https://en.wikipedi
 
 ```python
 def gc_content(seq):
-    g_count = seq.count("G") + seq.count("g")
-    c_count = seq.count("C") + seq.count("c")
-    return (g_count + c_count) / len(seq)
+    return (seq.count("G") + seq.count("C")) / len(seq)
 ```
 
 (Can you spot the bug in the code?)
