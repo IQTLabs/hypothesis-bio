@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   test:
-    name: Test Hypothesis-Bio on ${{ matrix.os }}
+    name: Test ${{ matrix.os }} with Python ${{ matrix.python-version}}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -65,5 +65,6 @@ jobs:
           python-version: "3.7"
       - name: Typecheck with Mypy
         run: |
+          pip install .
           pip install mypy
           mypy hypothesis_bio
