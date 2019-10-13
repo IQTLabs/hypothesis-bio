@@ -1,9 +1,6 @@
 name: CI
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
 
 jobs:
   test:
@@ -71,3 +68,18 @@ jobs:
           pip install .
           pip install mypy
           mypy hypothesis_bio
+
+  validate-docs-build:
+    name: Validate docs build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Node 10.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.x"
+      - name: Build site
+        run: cd docs && pip install -r requirements.txt && npm install && npm run build

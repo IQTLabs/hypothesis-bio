@@ -1,7 +1,10 @@
-name: Build documentation
-on: [push]
+name: Build and deploy documentation
+on:
+  push:
+    branches:
+      - master
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
