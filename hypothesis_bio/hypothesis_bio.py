@@ -21,7 +21,7 @@ def dna(draw, allow_ambiguous=True, uppercase_only=False, min_size=0, max_size=N
 def cds(draw, allow_ambiguous=True, uppercase_only=False, min_size=0, max_size=None):
     """Generates a [coding DNA sequence](https://en.wikipedia.org/wiki/Coding_region) (CDS).
 
-    The arguments are the same as for dna().
+    The arguments are the same as for [`dna()`](#dna).
     """
     # we use the same arguments as dna(), since a CDS will be a DNA sequence
     # we don't use kwargs to enable better autocompletion for developer ergonomics
