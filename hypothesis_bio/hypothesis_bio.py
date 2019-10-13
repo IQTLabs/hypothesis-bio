@@ -91,8 +91,6 @@ def parsed_fasta(
     comment_source=text(alphabet=characters(min_codepoint=32, max_codepoint=126)),
     sequence_source=dna(),
 ) -> dict:
-    """Generate strings representing sequences in FASTA format.
-    """
     comment = draw(comment_source)
     assume("\\n" not in comment)
     sequence = draw(sequence_source)
@@ -105,4 +103,6 @@ def parsed_fasta(
 
 @composite
 def fasta(draw):
+    """Generate strings representing sequences in FASTA format.
+    """
     return draw(parsed_fasta())["fasta"]
