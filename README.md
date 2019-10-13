@@ -1,5 +1,7 @@
 # Welcome to Hypothesis-Bio!
 
+![Build status](https://github.com/Lab41/hypothesis-bio/workflows/CI/badge.svg)
+
 Hypothesis extension for computational biology
 
 ## Quick Start
