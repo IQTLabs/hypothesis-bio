@@ -12,6 +12,7 @@ from typing import Optional
 def dna(
     draw,
     allow_ambiguous=True,
+    allow_gaps=True,
     uppercase_only=False,
     min_size=0,
     max_size: Optional[int] = None,
@@ -20,6 +21,7 @@ def dna(
 
     Arguments:
     - `allow_ambiguous`: Whether ambiguous bases are permitted.
+    - `allow_gaps`: Whether a `_` may be in the DNA sequence.
     - `uppercase_only`: Whether to use only uppercase characters.
     - `min_size`: The shortest DNA sequence to generate.
     - `max_size`: The longest DNA sequence to generate.
@@ -29,13 +31,20 @@ def dna(
     chars = "ATGC" if not allow_ambiguous else "ACGTNUKSYMWRBDHV"
     if not uppercase_only:
         chars += chars.lower()
-    chars += "-" if allow_ambiguous else ""
+    chars += "-" if allow_gaps else ""
 
     return draw(text(alphabet=chars, min_size=min_size, max_size=max_size))
 
 
 @composite
-def cds(draw, allow_ambiguous=True, uppercase_only=False, min_size=0, max_size=None):
+def cds(
+    draw,
+    allow_ambiguous=True,
+    allow_gaps=True,
+    uppercase_only=False,
+    min_size=0,
+    max_size=None,
+):
     """Generates [coding DNA sequences](https://en.wikipedia.org/wiki/Coding_region) (CDSs).
 
     The arguments are the same as for [`dna()`](#dna).
@@ -45,6 +54,7 @@ def cds(draw, allow_ambiguous=True, uppercase_only=False, min_size=0, max_size=N
     sequence = draw(
         dna(
             allow_ambiguous=allow_ambiguous,
+            allow_gaps=allow_gaps,
             uppercase_only=uppercase_only,
             min_size=min_size,
             max_size=max_size,
