@@ -187,9 +187,7 @@ The documentation for Hypothesis-Bio is available [here](https://lab41.github.io
 
 If you use Hypothesis-Bio, please cite it as:
 
-```
-
-```
+> Hypothesis-Bio. https://github.com/Lab41/hypothesis-bio
 
 or, for BibTeX:
 
