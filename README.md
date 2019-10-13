@@ -181,7 +181,7 @@ conda install -c [CHANNEL GOES HERE] hypothesis-bio
 
 ## Documentation
 
-The documentation for Hypothesis-Bio are available [here](https://lab41.github.io/hypothesis-bio/).
+The documentation for Hypothesis-Bio is available [here](https://lab41.github.io/hypothesis-bio/).
 
 ## Citation
 
