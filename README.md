@@ -193,7 +193,7 @@ If you use Hypothesis-Bio, please cite it as:
 
 or, for BibTeX:
 
-```
+```bibtex
 @misc{hypothesis_bio,
   author    = {Benjamin Lee},
   title     = {{Hypothesis-Bio}},
