@@ -2,10 +2,12 @@
 
 """Main module."""
 
-from hypothesis.strategies import composite, text, characters, sampled_from
-from hypothesis import assume
-from .utilities import ambiguous_start_codons, ambiguous_stop_codons
 from typing import Optional
+
+from hypothesis import assume
+from hypothesis.strategies import characters, composite, sampled_from, text
+
+from .utilities import ambiguous_start_codons, ambiguous_stop_codons
 
 
 @composite

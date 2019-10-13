@@ -1,5 +1,5 @@
-from typing import List
 from itertools import product
+from typing import List
 
 ambiguous_bases = {
     "A": ["A", "W", "M", "R", "D", "H", "V", "N"],
