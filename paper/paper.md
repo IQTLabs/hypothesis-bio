@@ -1,7 +1,7 @@
 ---
 title: Property-Based Testing for Biological Software
 author:
-  - "Benjamin Lee"
+  - Benjamin Lee
   # Department of Computer Science, School of Engineering and Applied Sciences, Harvard University, Cambridge, MA, 02138, USA
   # Lab41, In-Q-Tel, Menlo Park, CA, 94025, USA
   - Author 2
