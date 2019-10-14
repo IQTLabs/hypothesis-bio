@@ -1,6 +1,6 @@
-# Hello, HackSeq 2019!
+# Hello, hackseq19!
 
-Welcome to HackSeq 2019!
+Welcome to hackseq19!
 This year is going to be a lot of fun.
 We'll be building a tool that will make it easier to test bioinformatics software and throwing it at open source software to find real bugs.
 
@@ -12,7 +12,8 @@ While there's nothing you have to do (besides get excited!), if you want to get 
 2. Make sure you have Python 3 and git installed.
    If you're new to Python and/or git, don't worry at all.
 3. [Email me](mailto:benjamin_lee@college.harvard.edu) your GitHub username so I can add you to the repository (and [create an account](https://github.com/join)) if you haven't already.
-4. Read the [README](https://github.com/Lab41/hypothesis-bio/blob/master/README.md) and [CONTRIBUTING](https://github.com/Lab41/hypothesis-bio/blob/master/CONTRIBUTING.md) files, which have more background information.
+4. Join the hackseq19 Slack and the `p10-hypo` channel.
+5. Read the [README](https://github.com/Lab41/hypothesis-bio/blob/master/README.md) and [CONTRIBUTING](https://github.com/Lab41/hypothesis-bio/blob/master/CONTRIBUTING.md) files, which have more background information.
 
 ## Some ideas for what to work on
 
