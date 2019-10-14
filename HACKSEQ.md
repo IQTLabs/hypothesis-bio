@@ -11,7 +11,7 @@ While there's nothing you have to do (besides get excited!), if you want to get 
 1. Take a look at the [Hypothesis](https://hypothesis.readthedocs.io/en/latest/index.html) documentation, which is the tool on which Hypothesis-Bio is based.
 2. Make sure you have Python 3 and git installed.
    If you're new to Python and/or git, don't worry at all.
-3. [Email me](mailto:benjamin_lee@college.harvard.edu) your GitHub username so I can add you to the repository (and [create an account](https://github.com/join) if you haven't already(https://github.com/join)).
+3. [Email me](mailto:benjamin_lee@college.harvard.edu) your GitHub username so I can add you to the repository (and [create an account](https://github.com/join) if you haven't already.
 4. Read the [README](https://github.com/Lab41/hypothesis-bio/blob/master/README.md) and [CONTRIBUTING](https://github.com/Lab41/hypothesis-bio/blob/master/CONTRIBUTING.md) files, which have more background information.
 
 ## Some ideas for what to work on
