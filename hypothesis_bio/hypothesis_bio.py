@@ -92,7 +92,6 @@ def parsed_fasta(
     sequence_source=dna(),
 ) -> dict:
     comment = draw(comment_source)
-    assume("\\n" not in comment)
     sequence = draw(sequence_source)
     return {
         "fasta": ">" + comment + "\n" + sequence,
