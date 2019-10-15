@@ -23,7 +23,7 @@ def dna(
 
     Arguments:
     - `allow_ambiguous`: Whether ambiguous bases are permitted.
-    - `allow_gaps`: Whether a `_` may be in the DNA sequence.
+    - `allow_gaps`: Whether a `-` may be in the DNA sequence.
     - `uppercase_only`: Whether to use only uppercase characters.
     - `min_size`: The shortest DNA sequence to generate.
     - `max_size`: The longest DNA sequence to generate.
