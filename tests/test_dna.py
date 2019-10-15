@@ -24,4 +24,3 @@ def test_2_mer():
 @given(dna(max_size=10))
 def test_max_size(seq):
     assert len(seq) <= 10
-
