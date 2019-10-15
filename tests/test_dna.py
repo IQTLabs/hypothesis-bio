@@ -1,7 +1,7 @@
 from hypothesis import given
+from minimal import minimal
 
 from hypothesis_bio import dna
-from minimal import minimal
 
 
 @given(dna())

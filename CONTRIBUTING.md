@@ -65,14 +65,14 @@ Here's how to set up your local environment for development:
     $ git clone git@github.com:your_name_here/hypothesis_bio.git
     ```
 
-3.  Install your local copy into a virtualenv.
+3.  Install your local copy into a virtualenv and install `tox` for running
+    tests and checks.
 
     ```shell
     $ cd hypothesis-bio/
     $ virtualenv env
     $ source env/bin/activate
-    (env) $ pip install -e .
-    (env) $ pip install -r requirements-dev.txt
+    (env) $ pip install tox
     ```
 
 4.  Create a branch for local development:
@@ -86,16 +86,13 @@ Here's how to set up your local environment for development:
 5.  When you're done making changes, check that your changes pass flake8, mypy, black, and isort:
 
     ```shell
-    (env) $ mypy hypothesis_bio/
-    (env) $ black hypothesis_bio/
-    (env) $ isort hypothesis_bio/*
-    (env) $ flake8
+    (env) $ tox -e fix_lint
     ```
 
     Also, run your code through our test suite to ensure nothing breaks:
 
     ```shell
-    (env) $ pytest
+    (env) $ tox
     ```
 
 6.  Commit your changes and push your branch to GitHub:

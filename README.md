@@ -27,6 +27,7 @@ We can encode that requirement into a test:
 from hypothesis import given
 from hypothesis_bio import dna
 
+
 @given(dna())
 def test_gc_content(seq):
     assert 0 <= gc_content(seq) <= 1
@@ -34,7 +35,7 @@ def test_gc_content(seq):
 
 When we run the test (by calling `test_gc_content`), we get the following output:
 
-```python
+```shell
 Falsifying example: test_gc_content(seq='')
 
 ZeroDivisionError: division by zero
@@ -52,14 +53,72 @@ Let's consider another function that translates from DNA to protein:
 
 ```python
 genetic_code = {
-    'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M', 'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
-    'AAC':'N', 'AAT':'N', 'AAA':'K', 'AAG':'K', 'AGC':'S', 'AGT':'S', 'AGA':'R', 'AGG':'R',
-    'CTA':'L', 'CTC':'L', 'CTG':'L', 'CTT':'L', 'CCA':'P', 'CCC':'P', 'CCG':'P', 'CCT':'P',
-    'CAC':'H', 'CAT':'H', 'CAA':'Q', 'CAG':'Q', 'CGA':'R', 'CGC':'R', 'CGG':'R', 'CGT':'R',
-    'GTA':'V', 'GTC':'V', 'GTG':'V', 'GTT':'V', 'GCA':'A', 'GCC':'A', 'GCG':'A', 'GCT':'A',
-    'GAC':'D', 'GAT':'D', 'GAA':'E', 'GAG':'E', 'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGT':'G',
-    'TCA':'S', 'TCC':'S', 'TCG':'S', 'TCT':'S', 'TTC':'F', 'TTT':'F', 'TTA':'L', 'TTG':'L',
-    'TAC':'Y', 'TAT':'Y', 'TAA':'*', 'TAG':'*', 'TGC':'C', 'TGT':'C', 'TGA':'*', 'TGG':'W'}
+    "ATA": "I",
+    "ATC": "I",
+    "ATT": "I",
+    "ATG": "M",
+    "ACA": "T",
+    "ACC": "T",
+    "ACG": "T",
+    "ACT": "T",
+    "AAC": "N",
+    "AAT": "N",
+    "AAA": "K",
+    "AAG": "K",
+    "AGC": "S",
+    "AGT": "S",
+    "AGA": "R",
+    "AGG": "R",
+    "CTA": "L",
+    "CTC": "L",
+    "CTG": "L",
+    "CTT": "L",
+    "CCA": "P",
+    "CCC": "P",
+    "CCG": "P",
+    "CCT": "P",
+    "CAC": "H",
+    "CAT": "H",
+    "CAA": "Q",
+    "CAG": "Q",
+    "CGA": "R",
+    "CGC": "R",
+    "CGG": "R",
+    "CGT": "R",
+    "GTA": "V",
+    "GTC": "V",
+    "GTG": "V",
+    "GTT": "V",
+    "GCA": "A",
+    "GCC": "A",
+    "GCG": "A",
+    "GCT": "A",
+    "GAC": "D",
+    "GAT": "D",
+    "GAA": "E",
+    "GAG": "E",
+    "GGA": "G",
+    "GGC": "G",
+    "GGG": "G",
+    "GGT": "G",
+    "TCA": "S",
+    "TCC": "S",
+    "TCG": "S",
+    "TCT": "S",
+    "TTC": "F",
+    "TTT": "F",
+    "TTA": "L",
+    "TTG": "L",
+    "TAC": "Y",
+    "TAT": "Y",
+    "TAA": "*",
+    "TAG": "*",
+    "TGC": "C",
+    "TGT": "C",
+    "TGA": "*",
+    "TGG": "W",
+}
+
 
 def translate(dna):
     protein = ""
@@ -85,7 +144,7 @@ def test_translate(seq):
 
 When we run it, we get the following error:
 
-```python
+```shell
 Falsifying example: test_translate(seq='A')
 
 KeyError: 'A'
@@ -103,7 +162,7 @@ def test_translate(seq):
 
 Now we get this error:
 
-```python
+```shell
 Falsifying example: test_translate(seq='AA-')
 
 KeyError: 'AA-'
@@ -121,7 +180,7 @@ def test_translate(seq):
 
 Now we get:
 
-```python
+```shell
 Falsifying example: test_translate(seq='AAB')
 
 KeyError: 'AAB'
@@ -138,7 +197,7 @@ def test_translate(seq):
 
 Now we get:
 
-```python
+```shell
 Falsifying example: test_translate(seq='AAa')
 
 KeyError: 'AAa'
@@ -155,7 +214,7 @@ def test_translate(seq):
 
 And now we get:
 
-```python
+```shell
 Falsifying example: test_translate(seq='AAAA')
 
 KeyError: 'A'

@@ -20,14 +20,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
+          python -m pip install tox tox-gh-actions
       - name: Test with pytest
-        run: |
-          pip install pytest
-          pytest
+        run: tox
 
-  lint:
-    name: Lint the source code with Flake8
+  lint-and-style:
+    name: Lint and style check the source code with pre-commit hooks
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v1
@@ -35,24 +33,12 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: "3.7"
-      - name: Lint the source code with Flake8
+      - name: Install dependencies
         run: |
-          pip install flake8
-          flake8
-
-  style-check:
-    name: Ensure code style compliance with Black
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install Python 3.7
-        uses: actions/setup-python@v1
-        with:
-          python-version: "3.7"
-      - name: Ensure code style compliance with Black
-        run: |
-          pip install black
-          black --check hypothesis_bio
+          python -m pip install --upgrade pip
+          python -m pip install tox
+      - name: Run checks
+        run: tox -e package_description,fix_lint
 
   type-check:
     name: Typecheck with Mypy
@@ -63,11 +49,12 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: "3.7"
-      - name: Typecheck with Mypy
+      - name: Install dependencies
         run: |
-          pip install .
-          pip install mypy
-          mypy hypothesis_bio
+          python -m pip install --upgrade pip
+          python -m pip install tox
+      - name: Typecheck with Mypy
+        run: tox -e mypy
 
   validate-docs-build:
     name: Validate docs build
@@ -81,6 +68,10 @@ jobs:
       - name: Set up Python 3.x
         uses: actions/setup-python@v1
         with:
-          python-version: "3.x"
+          python-version: "3.7"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install tox
       - name: Build site
-        run: cd docs && pip install -r requirements.txt && npm install && npm run build
+        run: tox -e docs
