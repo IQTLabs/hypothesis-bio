@@ -37,18 +37,27 @@ def dna(
 
     return draw(text(alphabet=chars, min_size=min_size, max_size=max_size))
 
+
 @composite
-def fastq_quality(
-    draw,
-    size=0,
-):
+def fastq_quality(draw, size=0):
     """Generates the quality string for the FASTQ format
 
-    Arguments"
+    Arguments:
     - `size`: Size of the quality string to be generated
+
+    Note:
+    According to https://en.wikipedia.org/wiki/FASTQ_format,
+    the range of characters for the quality string ranges from
+    byte value 0x21 to 0x7E.
     """
-    chars = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
-    return draw(text(alphabet=chars, min_size=size, max_size=size))
+    return draw(
+        text(
+            alphabet=characters(min_codepoint=33, max_codepoint=121),
+            min_size=size,
+            max_size=size,
+        )
+    )
+
 
 @composite
 def cds(
@@ -119,12 +128,9 @@ def fasta(draw):
     """
     return draw(parsed_fasta())["fasta"]
 
+
 @composite
-def fastq(
-    draw,
-    fasta_source=fasta(),
-    quality_source=fastq_quality(),
-):
+def fastq(draw, fasta_source=fasta(), quality_source=fastq_quality()):
     """Generate strings representing sequences in FASTQ format.
     """
     fasta_sequence = draw(fasta_source)
@@ -132,4 +138,13 @@ def fastq(
     sequence_id = fasta_sequence["comment"]
     sequence_length = len(raw_sequence)
     quality_string = draw(quality_source(sequence_length))
-    return "@" + sequence_id + "\n" + raw_sequence + "+" + sequence_id + "\n" + quality_string
+    return (
+        "@"
+        + sequence_id
+        + "\n"
+        + raw_sequence
+        + "+"
+        + sequence_id
+        + "\n"
+        + quality_string
+    )
