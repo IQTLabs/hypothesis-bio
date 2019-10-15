@@ -2,7 +2,7 @@
 
 """Main module."""
 
-from typing import Optional
+from typing import Optional, Callable, Dict
 
 from hypothesis import assume
 from hypothesis.strategies import characters, composite, sampled_from, text
@@ -12,7 +12,7 @@ from .utilities import ambiguous_start_codons, ambiguous_stop_codons
 
 @composite
 def dna(
-    draw,
+    draw: Callable,
     allow_ambiguous=True,
     allow_gaps=True,
     uppercase_only=False,
@@ -40,7 +40,7 @@ def dna(
 
 @composite
 def cds(
-    draw,
+    draw: Callable,
     allow_ambiguous=True,
     allow_gaps=True,
     uppercase_only=False,
@@ -87,10 +87,13 @@ def cds(
 
 @composite
 def parsed_fasta(
-    draw,
-    comment_source=text(alphabet=characters(min_codepoint=32, max_codepoint=126)),
-    sequence_source=dna(),
-) -> dict:
+    draw: Callable, comment_source: str = None, sequence_source: str = None
+) -> Dict[str, str]:
+    if comment_source is None:
+        comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))
+    if sequence_source is None:
+        sequence_source = dna()
+
     comment = draw(comment_source)
     sequence = draw(sequence_source)
     return {
@@ -101,14 +104,14 @@ def parsed_fasta(
 
 
 @composite
-def fasta(draw):
+def fasta(draw: Callable) -> str:
     """Generate strings representing sequences in FASTA format.
     """
     return draw(parsed_fasta())["fasta"]
 
 
 @composite
-def fastq_quality(draw, size=0) -> str:
+def fastq_quality(draw: Callable, size=0) -> str:
     """Generates the quality string for the FASTQ format
 
     Arguments:
@@ -129,9 +132,12 @@ def fastq_quality(draw, size=0) -> str:
 
 
 @composite
-def fastq(draw, fasta_source=parsed_fasta()) -> str:
+def fastq(draw: Callable, fasta_source=Dict[str, str]) -> str:
     """Generate strings representing sequences in FASTQ format.
     """
+    if fasta_source is None:
+        fasta_source = parsed_fasta()
+
     fasta_sequence = draw(fasta_source)
     # TODO: randomly wrap the quality string
     quality_string = draw(fastq_quality(size=len(fasta_sequence["sequence"])))
