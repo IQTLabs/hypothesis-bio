@@ -1,0 +1,19 @@
+package:
+  name: hypothesis-bio
+  version: "0.1.0"
+
+source:
+  git_url: https://github.com/Lab41/hypothesis-bio.git
+
+requirements:
+  build:
+    - python >=3.6
+    - hypothesis
+
+  run:
+    - python >=3.6
+    - hypothesis
+
+about:
+  home: https://lab41.github.io/hypothesis-bio
+  license: Apache-2.0
