@@ -109,3 +109,6 @@ docs/node_modules/
 
 # don't track automatically generated api docs (used as input for vuepress)
 docs/api.md
+
+# ignore intellij IDE junk
+.idea
