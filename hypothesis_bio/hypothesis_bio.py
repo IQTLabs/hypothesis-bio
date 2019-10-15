@@ -2,9 +2,10 @@
 
 """Main module."""
 
-from typing import Optional, Callable, Dict
+from typing import Callable, Dict, Optional
 
 from hypothesis import assume
+from hypothesis.searchstrategy import SearchStrategy
 from hypothesis.strategies import characters, composite, sampled_from, text
 
 from .utilities import ambiguous_start_codons, ambiguous_stop_codons
@@ -87,7 +88,9 @@ def cds(
 
 @composite
 def parsed_fasta(
-    draw: Callable, comment_source: str = None, sequence_source: str = None
+    draw: Callable,
+    comment_source: SearchStrategy = None,
+    sequence_source: SearchStrategy = None,
 ) -> Dict[str, str]:
     if comment_source is None:
         comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))

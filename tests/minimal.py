@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
-from hypothesis import HealthCheck, Verbosity, given, settings as Settings
+from hypothesis import HealthCheck, Verbosity, given
+from hypothesis import settings as Settings
 from hypothesis.errors import Unsatisfiable
 from hypothesis.internal.reflection import get_pretty_function_description
 

@@ -1,6 +1,6 @@
 from hypothesis import given
-from hypothesis_bio import dna
 
+from hypothesis_bio import dna
 from minimal import minimal
 
 
