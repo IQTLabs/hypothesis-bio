@@ -39,27 +39,6 @@ def dna(
 
 
 @composite
-def fastq_quality(draw, size=0):
-    """Generates the quality string for the FASTQ format
-
-    Arguments:
-    - `size`: Size of the quality string to be generated
-
-    Note:
-    According to https://en.wikipedia.org/wiki/FASTQ_format,
-    the range of characters for the quality string ranges from
-    byte value 0x21 to 0x7E.
-    """
-    return draw(
-        text(
-            alphabet=characters(min_codepoint=33, max_codepoint=121),
-            min_size=size,
-            max_size=size,
-        )
-    )
-
-
-@composite
 def cds(
     draw,
     allow_ambiguous=True,
@@ -130,21 +109,41 @@ def fasta(draw):
 
 
 @composite
-def fastq(draw, fasta_source=fasta(), quality_source=fastq_quality()):
+def fastq_quality(draw, size=0) -> str:
+    """Generates the quality string for the FASTQ format
+
+    Arguments:
+    - `size`: Size of the quality string to be generated
+
+    Note:
+    According to https://en.wikipedia.org/wiki/FASTQ_format,
+    the range of characters for the quality string ranges from
+    byte value 0x21 to 0x7E.
+    """
+    return draw(
+        text(
+            alphabet=characters(min_codepoint=33, max_codepoint=126),
+            min_size=size,
+            max_size=size,
+        )
+    )
+
+
+@composite
+def fastq(draw, fasta_source=parsed_fasta()) -> str:
     """Generate strings representing sequences in FASTQ format.
     """
     fasta_sequence = draw(fasta_source)
-    raw_sequence = fasta_sequence["sequence"]
-    sequence_id = fasta_sequence["comment"]
-    sequence_length = len(raw_sequence)
-    quality_string = draw(quality_source(sequence_length))
+    # TODO: randomly wrap the quality string
+    quality_string = draw(fastq_quality(size=len(fasta_sequence["sequence"])))
     return (
         "@"
-        + sequence_id
+        + fasta_sequence["comment"]
         + "\n"
-        + raw_sequence
-        + "+"
-        + sequence_id
+        + fasta_sequence["sequence"]
+        + "\n+"
+        # original FASTQ format duplicated the comment (now usually omitted for space)
+        + draw(sampled_from(["", fasta_sequence["comment"]]))
         + "\n"
         + quality_string
     )
