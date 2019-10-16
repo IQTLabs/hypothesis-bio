@@ -40,6 +40,18 @@ def dna(
 
 
 @composite
+def protein(draw: Callable, min_size=0, max_size: Optional[int] = None):
+    """Generates protein sequences.
+
+    Arguments:
+    - `min_size`: The shortest protein sequence to generate.
+    - `max_size`: The longest protein sequence to generate.
+    """
+    chars = "ACDEFGHIKLMNOPQRSTUVWY"
+    return draw(text(alphabet=chars, min_size=min_size, max_size=max_size))
+
+
+@composite
 def cds(
     draw: Callable,
     allow_ambiguous=True,
