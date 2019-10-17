@@ -23,6 +23,10 @@ jobs:
           python -m pip install tox tox-gh-actions
       - name: Test with pytest
         run: tox
+      - name: Upload coverage to Codecov
+        run: tox -e coverage,codecov
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
 
   lint-and-style:
     name: Lint and style check the source code with pre-commit hooks
