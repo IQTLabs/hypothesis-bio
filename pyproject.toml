@@ -1,0 +1,40 @@
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module = "hypothesis_bio"
+dist-name = "hypothesis-bio"
+author = "Benjamin D. Lee, Luiz Irber, Michael Hall, Vaastav Anand"
+author-email = "benjamindlee@me.com, contact@luizirber.org, michael@mbh.sh, vaastav.anand05@gmail.com"
+home-page = "https://github.com/Lab41/hypothesis-bio"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: Hypothesis",
+    "License :: OSI Approved :: Apache Software License",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Software Development :: Testing",
+]
+requires = [
+    "hypothesis >= 4.0.0"
+]
+requires-python = ">=3.6"
+description-file = "README.md"
+
+[tool.flit.metadata.requires-extra]
+testing= [
+    "pytest >=2.7.3",
+    "pytest-cov",
+]
+docs = [
+# TODO: uncomment once pydoc-markdown is in PyPI
+#    "pydoc-markdown >=3.0.0"
+]
+
+[tool.isort]
+known_third_party = ["hypothesis", "minimal"]
