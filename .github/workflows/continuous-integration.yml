@@ -22,9 +22,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install tox tox-gh-actions
       - name: Test with pytest
-        run: tox
-      - name: Upload coverage to Codecov
-        run: tox -e coverage,codecov
+        run: |
+          tox
+          tox -e codecov
         env:
           CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
 
