@@ -8,7 +8,8 @@ from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
 from hypothesis.strategies import characters, composite, integers, sampled_from, text
 
-from .utilities import ambiguous_start_codons, ambiguous_stop_codons
+from .utilities import (ambiguous_start_codons, ambiguous_stop_codons,
+                        protein_1to3)
 
 
 @composite
@@ -40,17 +41,32 @@ def dna(
 
 
 @composite
-def protein(draw: Callable, allow_extended=False, min_size=0, max_size: Optional[int] = None):
+def protein(
+    draw: Callable,
+    allow_extended=False,
+    single_letter_protein=True,
+    min_size=0,
+    max_size: Optional[int] = None,
+):
     """Generates protein sequences.
 
     Arguments:
+    - `allow_extended`: Whether extended proteins are permitted.
+    - `single_letter_protein`: Whether 1-letter or 3-letter abbreivations of proteins should be used.
     - `min_size`: The shortest protein sequence to generate.
     - `max_size`: The longest protein sequence to generate.
     """
     chars = "ACDEFGHIKLMNPQRSTVWYX"
     if allow_extended:
         chars += "BJOUZ"
-    return draw(text(alphabet=chars, min_size=min_size, max_size=max_size))
+    sequence = draw(text(alphabet=chars, min_size=min_size, max_size=max_size))
+    if single_letter_protein:
+        return sequence
+    else:
+        sequence_3 = ""
+        for s in sequence:
+            sequence_3 += protein_1to3[s]
+        return sequence_3
 
 
 @composite
