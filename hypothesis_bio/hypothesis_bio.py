@@ -47,7 +47,7 @@ def protein(draw: Callable, min_size=0, max_size: Optional[int] = None):
     - `min_size`: The shortest protein sequence to generate.
     - `max_size`: The longest protein sequence to generate.
     """
-    chars = "ACDEFGHIKLMNOPQRSTUVWY"
+    chars = "ACDEFGHIKLMNOPQRSTUVWYX"
     return draw(text(alphabet=chars, min_size=min_size, max_size=max_size))
 
 
