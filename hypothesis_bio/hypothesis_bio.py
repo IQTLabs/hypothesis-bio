@@ -40,7 +40,7 @@ def dna(
 
 
 @composite
-def protein(draw: Callable, min_size=0, max_size: Optional[int] = None):
+def protein(draw: Callable, allow_extended=False, min_size=0, max_size: Optional[int] = None):
     """Generates protein sequences.
 
     Arguments:
@@ -48,6 +48,8 @@ def protein(draw: Callable, min_size=0, max_size: Optional[int] = None):
     - `max_size`: The longest protein sequence to generate.
     """
     chars = "ACDEFGHIKLMNOPQRSTUVWYX"
+    if allow_extended:
+        chars += "BZJUO"
     return draw(text(alphabet=chars, min_size=min_size, max_size=max_size))
 
 
