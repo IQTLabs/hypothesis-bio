@@ -1,6 +1,7 @@
 # Welcome to Hypothesis-Bio!
 
 ![Build status](https://github.com/Lab41/hypothesis-bio/workflows/CI/badge.svg)
+![codecov](https://codecov.io/gh/Lab41/hypothesis-bio/branch/master/graph/badge.svg)
 
 Hypothesis extension for computational biology
 
