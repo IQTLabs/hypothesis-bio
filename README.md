@@ -35,7 +35,7 @@ def test_gc_content(seq):
 
 When we run the test (by calling `test_gc_content`), we get the following output:
 
-```shell
+```python
 Falsifying example: test_gc_content(seq='')
 
 ZeroDivisionError: division by zero
@@ -88,7 +88,7 @@ def test_translate(seq):
 
 When we run it, we get the following error:
 
-```shell
+```python
 Falsifying example: test_translate(seq='A')
 
 KeyError: 'A'
@@ -106,7 +106,7 @@ def test_translate(seq):
 
 Now we get this error:
 
-```shell
+```python
 Falsifying example: test_translate(seq='AA-')
 
 KeyError: 'AA-'
@@ -124,7 +124,7 @@ def test_translate(seq):
 
 Now we get:
 
-```shell
+```python
 Falsifying example: test_translate(seq='AAB')
 
 KeyError: 'AAB'
@@ -141,7 +141,7 @@ def test_translate(seq):
 
 Now we get:
 
-```shell
+```python
 Falsifying example: test_translate(seq='AAa')
 
 KeyError: 'AAa'
@@ -158,7 +158,7 @@ def test_translate(seq):
 
 And now we get:
 
-```shell
+```python
 Falsifying example: test_translate(seq='AAAA')
 
 KeyError: 'A'
