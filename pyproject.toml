@@ -5,8 +5,8 @@ build-backend = "flit.buildapi"
 [tool.flit.metadata]
 module = "hypothesis_bio"
 dist-name = "hypothesis-bio"
-author = "Benjamin D. Lee, Luiz Irber"
-author-email = "benjamindlee@me.com, contact@luizirber.org"
+author = "Benjamin D. Lee, Luiz Irber, Michael Hall, Vaastav Anand"
+author-email = "benjamindlee@me.com, contact@luizirber.org, michael@mbh.sh, vaastav.anand05@gmail.com"
 home-page = "https://github.com/Lab41/hypothesis-bio"
 classifiers = [
     "Development Status :: 4 - Beta",
