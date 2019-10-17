@@ -11,7 +11,7 @@ home-page = "https://github.com/Lab41/hypothesis-bio"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Framework :: Hypothesis",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Intended Audience :: Developers",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
