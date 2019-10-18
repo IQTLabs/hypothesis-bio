@@ -6,7 +6,7 @@ from typing import Callable, Dict, Optional
 
 from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
-from hypothesis.strategies import characters, composite, sampled_from, text
+from hypothesis.strategies import characters, composite, integers, sampled_from, text
 
 from .utilities import ambiguous_start_codons, ambiguous_stop_codons
 
@@ -104,6 +104,27 @@ def parsed_fasta(
         "comment": comment,
         "sequence": sequence,
     }
+
+
+@composite
+def kmers(draw: Callable, seq: str, k: int) -> str:
+    """Generates k-mers (short sliding window substrings) from a given sequence
+
+    Arguments:
+    - `seq`: The sequence to be used for generating k-mers
+    - `k`: Size of the substrings to be generated
+    """
+    if len(seq) < k:
+        raise ValueError(
+            "The value of k: "
+            + str(k)
+            + " is greater than the length of the sequence: "
+            + str(len(seq))
+        )
+
+    kmer_index = draw(integers(min_value=0, max_value=len(seq) - k))
+    kmer = seq[kmer_index : kmer_index + k]
+    return kmer
 
 
 @composite
