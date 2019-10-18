@@ -38,3 +38,6 @@ docs = [
 
 [tool.isort]
 known_third_party = ["hypothesis", "minimal"]
+multi_line_output = 3
+include_trailing_comma = true
+line_length = 88
