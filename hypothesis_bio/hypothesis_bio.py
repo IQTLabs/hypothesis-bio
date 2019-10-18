@@ -112,49 +112,59 @@ def stop_codon(draw: Callable, allow_ambiguous=True) -> str:
 
 @composite
 def cds(
-    draw,
+    draw: Callable,
+    include_start_codon=True,
+    include_stop_codon=True,
+    allow_internal_stop_codons=True,
     allow_ambiguous=True,
-    allow_gaps=True,
     uppercase_only=False,
     min_size=0,
     max_size=None,
-):
+) -> str:
     """Generates [coding DNA sequences](https://en.wikipedia.org/wiki/Coding_region) (CDSs).
 
-    The arguments are the same as for [`dna()`](#dna).
+    Arguments:
+    - `include_start_codon`: Whether to include a [start codon](#start_codon) at the beginning.
+    - `include_stop_codon`: Whether to include a [stop codon](#stop_codon) at the end.
+    - `allow_internal_stop_codons`: Whether stop codons may occur at any place other than the end.
+    - `allow_ambiguous`: Whether ambiguous bases are permitted.
+    - `uppercase_only`: Whether to use only uppercase characters.
+    - `min_size`: The shortest CDS to generate in base pairs.
+    - `max_size`: The longest CDS to generate in base pairs.
     """
-    # we use the same arguments as dna(), since a CDS will be a DNA sequence
-    # we don't use kwargs to enable better autocompletion for developer ergonomics
+
+    # first, create the main DNA sequence
+    if include_start_codon and max_size is not None:
+        max_size -= 3
+    if include_stop_codon and max_size is not None:
+        max_size -= 3
     sequence = draw(
         dna(
             allow_ambiguous=allow_ambiguous,
-            allow_gaps=allow_gaps,
+            allow_gaps=False,
             uppercase_only=uppercase_only,
             min_size=min_size,
             max_size=max_size,
         )
     )
-
-    # ensure the sequence is divisible into codons
     assume(len(sequence) % 3 == 0)
 
-    # remove start/stop codons that aren't at the beginning/end
-    for codon in range(3, len(sequence) - 3, 3):
-        assume(sequence[codon : codon + 3].upper() not in ambiguous_start_codons)
-        assume(sequence[codon : codon + 3].upper() not in ambiguous_stop_codons)
+    # remove stop codons that aren't at the end if requested
+    if not allow_internal_stop_codons:
+        for codon in range(3, len(sequence) - 3, 3):
+            assume(sequence[codon : codon + 3].upper() not in ambiguous_start_codons)
 
-    # if we do have a sequence (aka not ''), make sure it has a start and stop codon
-    if sequence:
-        if allow_ambiguous:
-            sequence = (
-                draw(sampled_from(ambiguous_start_codons))
-                + sequence
-                + draw(sampled_from(ambiguous_stop_codons))
-            )
-        else:
-            sequence = "ATG" + sequence + draw(sampled_from(["TAA", "TAG", "TGA"]))
+    # now determine start/stop codons
+    if include_start_codon:
+        _start_codon = draw(start_codon(allow_ambiguous=allow_ambiguous))
+    else:
+        _start_codon = ""
+    if include_stop_codon:
+        _stop_codon = draw(stop_codon(allow_ambiguous=allow_ambiguous))
+    else:
+        _stop_codon = ""
 
-    return sequence
+    return _start_codon + sequence + _stop_codon
 
 
 @composite
