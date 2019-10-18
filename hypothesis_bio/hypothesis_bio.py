@@ -8,8 +8,7 @@ from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
 from hypothesis.strategies import characters, composite, integers, sampled_from, text
 
-from .utilities import (ambiguous_start_codons, ambiguous_stop_codons,
-                        protein_1to3)
+from .utilities import ambiguous_start_codons, ambiguous_stop_codons, protein_1to3
 
 
 @composite
