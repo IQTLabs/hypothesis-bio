@@ -27,4 +27,4 @@ def test_long_seq_example_big_k():
 
 def test_exception():
     with pytest.raises(Exception):
-        kmers(seq="A", k=5)
+        print(minimal(kmers(seq="A", k=5)))

@@ -113,7 +113,13 @@ def kmers(draw: Callable, seq: str, k: int) -> str:
     - `seq`: The sequence to be used for generating k-mers
     - `k`: Size of the substrings to be generated
     """
-    assert len(seq) >= k
+    if len(seq) < k:
+        raise ValueError(
+            "The value of k: "
+            + str(k)
+            + " is greater than the length of the sequence: "
+            + len(seq)
+        )
 
     kmer_index = draw(integers(min_value=0, max_value=len(seq) - k))
     kmer = seq[kmer_index : kmer_index + k]
