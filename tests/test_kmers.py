@@ -1,8 +1,7 @@
-from hypothesis import given
+import pytest
 from minimal import minimal
 
 from hypothesis_bio import kmers
-import pytest
 
 
 def test_smallest_example():

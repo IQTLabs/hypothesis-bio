@@ -106,6 +106,7 @@ def parsed_fasta(
     }
 
 
+@composite
 def kmers(draw: Callable, seq: str, k: int) -> str:
     """Generates k-mers (short sliding window substrings) from a given sequence
 
@@ -118,7 +119,7 @@ def kmers(draw: Callable, seq: str, k: int) -> str:
             "The value of k: "
             + str(k)
             + " is greater than the length of the sequence: "
-            + len(seq)
+            + str(len(seq))
         )
 
     kmer_index = draw(integers(min_value=0, max_value=len(seq) - k))
