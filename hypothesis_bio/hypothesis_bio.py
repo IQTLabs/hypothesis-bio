@@ -238,7 +238,13 @@ def fastq_quality(
 
 @composite
 def fastq(
-    draw, size=0, min_score: int = 0, max_score: int = 62, offset: int = 64
+    draw,
+    size=0,
+    min_score: int = 0,
+    max_score: int = 62,
+    offset: int = 64,
+    add_comment: bool = False,
+    additional_description: bool = False,
 ) -> str:
     """Generate strings representing sequences in FASTQ format.
 
@@ -247,13 +253,15 @@ def fastq(
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset for quality string.
+    - `add_comment`: Add a comment string after the sequence ID, separated by a space.
+    - `additional_description`: Add sequence ID and comment after `+` on thrid line.
     for more details.
 
     Note:
         See https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/ for more details on
         the FASTQ format (and its quality score encoding).
     """
-    header = draw(sequence_id())
+    seq_id = draw(sequence_id())
     sequence = draw(
         dna(
             allow_ambiguous=False,
@@ -263,13 +271,18 @@ def fastq(
             max_size=size,
         )
     )
-    description = ""
+    comment = " " + draw(sequence_id()) if add_comment else ""
     quality = draw(
         fastq_quality(
             size=size, min_score=min_score, max_score=max_score, offset=offset
         )
     )
+    description = seq_id + comment if additional_description else ""
 
-    return "@{header}\n{sequence}\n+{description}\n{quality}".format(
-        header=header, sequence=sequence, description=description, quality=quality
+    return "@{seq_id}{comment}\n{sequence}\n+{description}\n{quality}".format(
+        seq_id=seq_id,
+        sequence=sequence,
+        comment=comment,
+        quality=quality,
+        description=description,
     )

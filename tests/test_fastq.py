@@ -78,3 +78,47 @@ def test_fastq_size_over_one(fastq_string: str):
 
     quality = fields[-1]
     assert all(64 <= ord(c) <= 126 for c in quality)
+
+
+@given(fastq(size=10, add_comment=True))
+def test_fastq_size_over_one_with_comment(fastq_string: str):
+    fields = fastq_string.split("\n")
+    header_begin = fields[0][0]
+    assert header_begin == "@"
+
+    header = fields[0][1:]
+    assert all(c not in ">@" for c in header)
+    assert " " in header
+
+    sequence = fields[1]
+    assert all(c in "ACGT" for c in sequence)
+
+    seq_qual_sep = fields[2][0]
+    assert seq_qual_sep == "+"
+
+    quality = fields[-1]
+    assert all(64 <= ord(c) <= 126 for c in quality)
+
+
+@given(fastq(size=10, add_comment=True, additional_description=True))
+def test_fastq_size_over_one_with_comment(fastq_string: str):
+    fields = fastq_string.split("\n")
+    header_begin = fields[0][0]
+    assert header_begin == "@"
+
+    header = fields[0][1:]
+    assert all(c not in ">@" for c in header)
+    assert " " in header
+
+    sequence = fields[1]
+    assert all(c in "ACGT" for c in sequence)
+
+    seq_qual_sep = fields[2][0]
+    assert seq_qual_sep == "+"
+
+    additional_description = fields[2][1:]
+    assert all(c not in ">@" for c in header)
+    assert " " in header
+
+    quality = fields[-1]
+    assert all(64 <= ord(c) <= 126 for c in quality)
