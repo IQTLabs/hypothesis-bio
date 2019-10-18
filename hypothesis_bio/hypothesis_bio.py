@@ -242,8 +242,8 @@ def fastq(
     min_score: int = 0,
     max_score: int = 62,
     offset: int = 64,
-    add_comment: bool = False,
-    additional_description: bool = False,
+    add_comment: bool = True,
+    additional_description: bool = True,
 ) -> str:
     """Generate strings representing sequences in FASTQ format.
 

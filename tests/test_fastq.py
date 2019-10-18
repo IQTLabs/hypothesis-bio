@@ -49,14 +49,14 @@ def test_fastq_quality_offset_causes_outside_ascii_range_raises_error():
 
 def test_fastq_smallest_example():
     actual = minimal(fastq())
-    expected = "@\n\n+\n"
+    expected = "@ \n\n+ \n"
 
     assert actual == expected
 
 
 def test_fastq_smallest_non_empty():
     actual = minimal(fastq(size=1))
-    expected = "@\nA\n+\n@"
+    expected = "@ \nA\n+ \n@"
 
     assert actual == expected
 
@@ -80,7 +80,7 @@ def test_fastq_size_over_one(fastq_string: str):
     assert all(64 <= ord(c) <= MAX_ASCII for c in quality)
 
 
-@given(fastq(size=10, add_comment=True))
+@given(fastq(size=10, add_comment=True, additional_description=False))
 def test_fastq_size_over_one_with_comment(fastq_string: str):
     fields = fastq_string.split("\n")
     header_begin = fields[0][0]
