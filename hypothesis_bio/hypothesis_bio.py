@@ -189,7 +189,7 @@ def fastq_quality(draw: Callable, size=0) -> str:
     """
     return draw(
         text(
-            alphabet=characters(min_codepoint=33, max_codepoint=126),
+            alphabet=characters(min_codepoint=64, max_codepoint=126),
             min_size=size,
             max_size=size,
         )
