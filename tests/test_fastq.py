@@ -1,5 +1,5 @@
 from .minimal import minimal
-import hypothesis
+from hypothesis import errors, given
 import pytest
 from hypothesis_bio.hypothesis_bio import fastq, fastq_quality
 
@@ -35,7 +35,7 @@ def test_fastq_quality_size_three_with_one_quality_score_and_sanger_offset():
 def test_fastq_quality_min_score_larger_than_max_score_raises_error():
     min_score = 10
     max_score = 9
-    with pytest.raises(hypothesis.errors.InvalidArgument):
+    with pytest.raises(errors.InvalidArgument):
         minimal(fastq_quality(min_score=min_score, max_score=max_score))
 
 
@@ -52,3 +52,29 @@ def test_fastq_smallest_example():
     expected = "@\n\n+\n"
 
     assert actual == expected
+
+
+def test_fastq_smallest_non_empty():
+    actual = minimal(fastq(size=1))
+    expected = "@\nA\n+\n@"
+
+    assert actual == expected
+
+
+@given(fastq(size=10))
+def test_fastq_size_over_one(fastq_string: str):
+    fields = fastq_string.split("\n")
+    header_begin = fields[0][0]
+    assert header_begin == "@"
+
+    header = fields[0][1:]
+    assert all(c not in ">@" for c in header)
+
+    sequence = fields[1]
+    assert all(c in "ACGT" for c in sequence)
+
+    seq_qual_sep = fields[2][0]
+    assert seq_qual_sep == "+"
+
+    quality = fields[-1]
+    assert all(64 <= ord(c) <= 126 for c in quality)

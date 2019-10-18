@@ -2,7 +2,7 @@
 
 """Main module."""
 
-from typing import Callable, Dict, Optional
+from typing import Dict, Optional, Sequence
 
 from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
@@ -16,7 +16,7 @@ MAX_ASCII = 126
 
 @composite
 def dna(
-    draw: Callable,
+    draw,
     allow_ambiguous=True,
     allow_gaps=True,
     uppercase_only=False,
@@ -44,7 +44,7 @@ def dna(
 
 @composite
 def protein(
-    draw: Callable,
+    draw,
     allow_extended=False,
     allow_ambiguous=True,
     single_letter_protein=True,
@@ -85,7 +85,7 @@ def protein(
 
 @composite
 def cds(
-    draw: Callable,
+    draw,
     allow_ambiguous=True,
     allow_gaps=True,
     uppercase_only=False,
@@ -132,9 +132,7 @@ def cds(
 
 @composite
 def parsed_fasta(
-    draw: Callable,
-    comment_source: SearchStrategy = None,
-    sequence_source: SearchStrategy = None,
+    draw, comment_source: SearchStrategy = None, sequence_source: SearchStrategy = None
 ) -> Dict[str, str]:
     if comment_source is None:
         comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))
@@ -151,7 +149,7 @@ def parsed_fasta(
 
 
 @composite
-def kmers(draw: Callable, seq: str, k: int) -> str:
+def kmers(draw, seq: str, k: int) -> str:
     """Generates k-mers (short sliding window substrings) from a given sequence
 
     Arguments:
@@ -179,8 +177,30 @@ def fasta(draw) -> str:
 
 
 @composite
+def sequence_id(
+    draw, blacklist_characters: Sequence[str] = ">@", max_size: int = 100
+) -> str:
+    """Generates a sequence ID.
+
+    Arguments:
+    - `blacklist_character`: Characters to not include in the sequence ID.
+    - `max_size`: Maximum length of the sequence ID.
+    """
+    return draw(
+        text(
+            alphabet=characters(
+                blacklist_characters=blacklist_characters,
+                min_codepoint=33,
+                max_codepoint=126,
+            ),
+            max_size=max_size,
+        )
+    )
+
+
+@composite
 def fastq_quality(
-    draw: Callable, size=0, min_score: int = 0, max_score: int = 62, offset: int = 64
+    draw, size=0, min_score: int = 0, max_score: int = 62, offset: int = 64
 ) -> str:
     """Generates the quality string for the FASTQ format
 
@@ -188,13 +208,12 @@ def fastq_quality(
     - `size`: Size of the quality string to be generated
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
-    - `offset`: ASCII encoding offset. See https://en.wikipedia.org/wiki/FASTQ_format#Encoding
+    - `offset`: ASCII encoding offset.
     for more details.
 
     Note:
-    According to https://en.wikipedia.org/wiki/FASTQ_format,
-    the range of characters for the quality string ranges from
-    byte value 0x21 to 0x7E.
+        See https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/ for more details on
+        the quality score encoding.
     """
     min_codepoint = min_score + offset
     max_codepoint = max_score + offset
@@ -218,13 +237,38 @@ def fastq_quality(
 
 
 @composite
-def fastq(draw: Callable) -> str:
+def fastq(
+    draw, size=0, min_score: int = 0, max_score: int = 62, offset: int = 64
+) -> str:
     """Generate strings representing sequences in FASTQ format.
+
+    Arguments:
+    - `size`: Size of the sequence and quality string.
+    - `min_score`: Lowest quality (PHRED) score to use.
+    - `max_score`: Highest quality (PHRED) score to use.
+    - `offset`: ASCII encoding offset for quality string.
+    for more details.
+
+    Note:
+        See https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/ for more details on
+        the FASTQ format (and its quality score encoding).
     """
-    header = ""
-    sequence = draw(dna())
+    header = draw(sequence_id())
+    sequence = draw(
+        dna(
+            allow_ambiguous=False,
+            allow_gaps=False,
+            uppercase_only=True,
+            min_size=size,
+            max_size=size,
+        )
+    )
     description = ""
-    quality = draw(fastq_quality(size=len(sequence)))
+    quality = draw(
+        fastq_quality(
+            size=size, min_score=min_score, max_score=max_score, offset=offset
+        )
+    )
 
     return "@{header}\n{sequence}\n+{description}\n{quality}".format(
         header=header, sequence=sequence, description=description, quality=quality
