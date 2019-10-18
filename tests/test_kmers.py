@@ -1,5 +1,5 @@
 import pytest
-from minimal import minimal
+from .minimal import minimal
 
 from hypothesis_bio import kmers
 
