@@ -1,7 +1,7 @@
 from .minimal import minimal
 from hypothesis import errors, given
 import pytest
-from hypothesis_bio.hypothesis_bio import fastq, fastq_quality
+from hypothesis_bio.hypothesis_bio import fastq, fastq_quality, MAX_ASCII
 
 
 def test_fastq_quality_smallest_example():
@@ -77,7 +77,7 @@ def test_fastq_size_over_one(fastq_string: str):
     assert seq_qual_sep == "+"
 
     quality = fields[-1]
-    assert all(64 <= ord(c) <= 126 for c in quality)
+    assert all(64 <= ord(c) <= MAX_ASCII for c in quality)
 
 
 @given(fastq(size=10, add_comment=True))
@@ -97,7 +97,7 @@ def test_fastq_size_over_one_with_comment(fastq_string: str):
     assert seq_qual_sep == "+"
 
     quality = fields[-1]
-    assert all(64 <= ord(c) <= 126 for c in quality)
+    assert all(64 <= ord(c) <= MAX_ASCII for c in quality)
 
 
 @given(fastq(size=10, add_comment=True, additional_description=True))
@@ -121,4 +121,4 @@ def test_fastq_size_over_one_with_comment(fastq_string: str):
     assert " " in header
 
     quality = fields[-1]
-    assert all(64 <= ord(c) <= 126 for c in quality)
+    assert all(64 <= ord(c) <= MAX_ASCII for c in quality)

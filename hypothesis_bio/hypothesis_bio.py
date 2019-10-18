@@ -191,7 +191,7 @@ def sequence_id(
             alphabet=characters(
                 blacklist_characters=blacklist_characters,
                 min_codepoint=33,
-                max_codepoint=126,
+                max_codepoint=MAX_ASCII,
             ),
             max_size=max_size,
         )
