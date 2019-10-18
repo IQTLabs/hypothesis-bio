@@ -183,7 +183,7 @@ def sequence_id(
     """Generates a sequence ID.
 
     Arguments:
-    - `blacklist_character`: Characters to not include in the sequence ID.
+    - `blacklist_characters`: Characters to not include in the sequence ID.
     - `max_size`: Maximum length of the sequence ID.
     """
     return draw(
@@ -209,7 +209,6 @@ def fastq_quality(
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset.
-    for more details.
 
     Note:
         See https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/ for more details on
@@ -254,8 +253,7 @@ def fastq(
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset for quality string.
     - `add_comment`: Add a comment string after the sequence ID, separated by a space.
-    - `additional_description`: Add sequence ID and comment after `+` on thrid line.
-    for more details.
+    - `additional_description`: Add sequence ID and comment after `+` on third line.
 
     Note:
         See https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/ for more details on
