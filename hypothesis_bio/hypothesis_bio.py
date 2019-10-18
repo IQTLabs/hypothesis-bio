@@ -107,7 +107,7 @@ def parsed_fasta(
 
 
 @composite
-def fasta(draw: Callable) -> str:
+def fasta(draw) -> str:
     """Generate strings representing sequences in FASTA format.
     """
     return draw(parsed_fasta())["fasta"]
