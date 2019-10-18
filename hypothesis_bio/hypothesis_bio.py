@@ -11,6 +11,9 @@ from hypothesis.strategies import characters, composite, integers, sampled_from,
 from .utilities import ambiguous_start_codons, ambiguous_stop_codons, protein_1to3
 
 
+MAX_ASCII = 126
+
+
 @composite
 def dna(
     draw: Callable,
@@ -176,20 +179,38 @@ def fasta(draw) -> str:
 
 
 @composite
-def fastq_quality(draw: Callable, size=0) -> str:
+def fastq_quality(
+    draw: Callable, size=0, min_score: int = 0, max_score: int = 62, offset: int = 64
+) -> str:
     """Generates the quality string for the FASTQ format
 
     Arguments:
     - `size`: Size of the quality string to be generated
+    - `min_score`: Lowest quality (PHRED) score to use.
+    - `max_score`: Highest quality (PHRED) score to use.
+    - `offset`: ASCII encoding offset. See https://en.wikipedia.org/wiki/FASTQ_format#Encoding
+    for more details.
 
     Note:
     According to https://en.wikipedia.org/wiki/FASTQ_format,
     the range of characters for the quality string ranges from
     byte value 0x21 to 0x7E.
     """
+    min_codepoint = min_score + offset
+    max_codepoint = max_score + offset
+
+    if max_codepoint > MAX_ASCII:
+        raise ValueError(
+            "{} is larger than the maximum ASCII value {}".format(
+                max_codepoint, MAX_ASCII
+            )
+        )
+
     return draw(
         text(
-            alphabet=characters(min_codepoint=64, max_codepoint=126),
+            alphabet=characters(
+                min_codepoint=min_codepoint, max_codepoint=max_codepoint
+            ),
             min_size=size,
             max_size=size,
         )
@@ -197,23 +218,14 @@ def fastq_quality(draw: Callable, size=0) -> str:
 
 
 @composite
-def fastq(draw: Callable, fasta_source=Dict[str, str]) -> str:
+def fastq(draw: Callable) -> str:
     """Generate strings representing sequences in FASTQ format.
     """
-    if fasta_source is None:
-        fasta_source = parsed_fasta()
+    header = ""
+    sequence = draw(dna())
+    description = ""
+    quality = draw(fastq_quality(size=len(sequence)))
 
-    fasta_sequence = draw(fasta_source)
-    # TODO: randomly wrap the quality string
-    quality_string = draw(fastq_quality(size=len(fasta_sequence["sequence"])))
-    return (
-        "@"
-        + fasta_sequence["comment"]
-        + "\n"
-        + fasta_sequence["sequence"]
-        + "\n+"
-        # original FASTQ format duplicated the comment (now usually omitted for space)
-        + draw(sampled_from(["", fasta_sequence["comment"]]))
-        + "\n"
-        + quality_string
+    return "@{header}\n{sequence}\n+{description}\n{quality}".format(
+        header=header, sequence=sequence, description=description, quality=quality
     )
