@@ -211,7 +211,7 @@ def fastq_quality(
     - `offset`: ASCII encoding offset.
 
     Note:
-        See https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/ for more details on
+        See <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/> for more details on
         the quality score encoding.
     """
     min_codepoint = min_score + offset
@@ -256,7 +256,7 @@ def fastq(
     - `additional_description`: Add sequence ID and comment after `+` on third line.
 
     Note:
-        See https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/ for more details on
+        See <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/> for more details on
         the FASTQ format (and its quality score encoding).
     """
     seq_id = draw(sequence_id())
