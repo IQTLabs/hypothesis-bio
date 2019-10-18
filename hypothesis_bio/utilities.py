@@ -1,6 +1,3 @@
-from itertools import product
-from typing import List
-
 ambiguous_bases = {
     "A": ["A", "W", "M", "R", "D", "H", "V", "N"],
     "T": ["T", "W", "K", "Y", "B", "D", "H", "N"],
@@ -39,17 +36,66 @@ protein_1to3 = {
     "Z": "Glx",
 }
 
+# sorted(list(set([codon for table in [table.start_codons for table in CodonTable.unambiguous_dna_by_id.values()] for codon in table])))
+start_codons = ["ATA", "ATC", "ATG", "ATT", "CTG", "GTG", "TTA", "TTG"]
+# from Bio.Data import CodonTable
+# sorted(list(set([codon for table in [table.start_codons for table in CodonTable.ambiguous_dna_by_id.values()] for codon in table])))
+ambiguous_start_codons = [
+    "ATA",
+    "ATB",
+    "ATC",
+    "ATD",
+    "ATG",
+    "ATH",
+    "ATK",
+    "ATM",
+    "ATN",
+    "ATR",
+    "ATS",
+    "ATT",
+    "ATV",
+    "ATW",
+    "ATX",
+    "ATY",
+    "BTG",
+    "CTG",
+    "DTG",
+    "GTG",
+    "HTG",
+    "KTG",
+    "MTG",
+    "NTG",
+    "RTG",
+    "STG",
+    "TTA",
+    "TTG",
+    "TTR",
+    "VTG",
+    "WTA",
+    "WTG",
+    "WTR",
+    "XTG",
+    "YTG",
+]
 
-def ambiguate_seq(seq: str) -> List[str]:
-    return [
-        "".join(prod)
-        for prod in list(product(*[ambiguous_bases[base] for base in seq]))
-    ]
-
-
-ambiguous_start_codons = ambiguate_seq("ATG")
+# sorted(list(set([codon for table in [table.stop_codons for table in CodonTable.unambiguous_dna_by_id.values()] for codon in table])))
+stop_codons = ["AGA", "AGG", "TAA", "TAG", "TCA", "TGA", "TTA"]
+# sorted(list(set([codon for table in [table.stop_codons for table in CodonTable.ambiguous_dna_by_id.values()] for codon in table])))
 ambiguous_stop_codons = [
-    ambig_stop
-    for stop_codon in ["TAA", "TAG", "TGA"]
-    for ambig_stop in ambiguate_seq(stop_codon)
+    "AGA",
+    "AGG",
+    "AGR",
+    "TAA",
+    "TAG",
+    "TAR",
+    "TCA",
+    "TDA",
+    "TGA",
+    "TKA",
+    "TMA",
+    "TRA",
+    "TSA",
+    "TTA",
+    "TVA",
+    "TWA",
 ]

@@ -8,7 +8,13 @@ from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
 from hypothesis.strategies import characters, composite, integers, sampled_from, text
 
-from .utilities import ambiguous_start_codons, ambiguous_stop_codons, protein_1to3
+from .utilities import (
+    ambiguous_start_codons,
+    ambiguous_stop_codons,
+    protein_1to3,
+    start_codons,
+    stop_codons,
+)
 
 MAX_ASCII = 126
 
@@ -80,6 +86,28 @@ def protein(
         for s in sequence:
             sequence_3 += protein_1to3[s]
         return sequence_3
+
+
+@composite
+def start_codon(draw: Callable, allow_ambiguous=True) -> str:
+    """Strategy to generate [start codons](https://en.wikipedia.org/wiki/Start_codon).
+
+    Arguments:
+    - `allow_ambiguous`: Whether ambiguous bases are permitted.
+    """
+    return draw(
+        sampled_from(ambiguous_start_codons if allow_ambiguous else start_codons)
+    )
+
+
+@composite
+def stop_codon(draw: Callable, allow_ambiguous=True) -> str:
+    """Strategy to generate [stop codons](https://en.wikipedia.org/wiki/Stop_codon).
+
+    Arguments:
+    - `allow_ambiguous`: Whether ambiguous bases are permitted.
+    """
+    return draw(sampled_from(ambiguous_stop_codons if allow_ambiguous else stop_codons))
 
 
 @composite
