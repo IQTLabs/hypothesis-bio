@@ -43,21 +43,33 @@ def dna(
 def protein(
     draw: Callable,
     allow_extended=False,
+    allow_ambiguous=True,
     single_letter_protein=True,
+    uppercase_only=False,
     min_size=0,
     max_size: Optional[int] = None,
 ):
     """Generates protein sequences.
 
+    ::: tip Tip
+    By default, only canonical amino acids are used.
+    :::
+
     Arguments:
-    - `allow_extended`: Whether extended proteins are permitted.
-    - `single_letter_protein`: Whether 1-letter or 3-letter abbreivations of proteins should be used.
+    - `allow_extended`: Whether the extended amino acid alphabet should be used.
+    - `allow_ambiguous`: Whether ambiguous amino acids are permitted.
+    - `single_letter_protein`: Whether 1-letter or 3-letter abbreviations of proteins should be used.
+    - `uppercase_only`: Whether to restrict the protein sequence to uppercase characters.
     - `min_size`: The shortest protein sequence to generate.
     - `max_size`: The longest protein sequence to generate.
     """
-    chars = "ACDEFGHIKLMNPQRSTVWYX"
+    chars = "ACDEFGHIKLMNPQRSTVWY"
+    if allow_ambiguous:
+        chars += "X"
     if allow_extended:
         chars += "BJOUZ"
+    if not uppercase_only:
+        chars += chars.lower()
     sequence = draw(text(alphabet=chars, min_size=min_size, max_size=max_size))
     if single_letter_protein:
         return sequence
