@@ -50,14 +50,14 @@ def test_fastq_quality_offset_causes_outside_ascii_range_raises_error():
 
 def test_fastq_smallest_example():
     actual = minimal(fastq())
-    expected = "@ \n\n+ \n"
+    expected = "@0 0\n\n+0 0\n"
 
     assert actual == expected
 
 
 def test_fastq_smallest_non_empty():
     actual = minimal(fastq(size=1))
-    expected = "@ \nA\n+ \n0"
+    expected = "@0 0\nA\n+0 0\n0"
 
     assert actual == expected
 
@@ -68,8 +68,14 @@ def test_fastq_size_over_one(fastq_string: str):
     header_begin = fields[0][0]
     assert header_begin == "@"
 
-    header = fields[0][1:]
-    assert all(c not in ">@" for c in header)
+    seq_id, comment = fields[0][1:].split()
+    seq_id_opt, comment_opt = fields[2][1:].split()
+    if seq_id:
+        assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id)
+        assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id_opt)
+    if comment:
+        assert all(33 <= ord(c) <= MAX_ASCII for c in comment)
+        assert all(33 <= ord(c) <= MAX_ASCII for c in comment_opt)
 
     sequence = fields[1]
     assert all(c in "ACGT" for c in sequence)
@@ -87,15 +93,20 @@ def test_fastq_size_over_one_with_comment_no_additional_description(fastq_string
     header_begin = fields[0][0]
     assert header_begin == "@"
 
-    header = fields[0][1:]
-    assert all(c not in ">@" for c in header)
-    assert " " in header
+    seq_id, comment = fields[0][1:].split()
+    if seq_id:
+        assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id)
+    if comment:
+        assert all(33 <= ord(c) <= MAX_ASCII for c in comment)
 
     sequence = fields[1]
     assert all(c in "ACGT" for c in sequence)
 
     seq_qual_sep = fields[2][0]
     assert seq_qual_sep == "+"
+
+    optional_description = fields[2][1:].split()
+    assert not optional_description
 
     quality = fields[-1]
     assert all(33 <= ord(c) <= MAX_ASCII for c in quality)
@@ -107,19 +118,20 @@ def test_fastq_size_over_one_with_comment(fastq_string: str):
     header_begin = fields[0][0]
     assert header_begin == "@"
 
-    header = fields[0][1:]
-    assert all(c not in ">@" for c in header)
-    assert " " in header
+    seq_id, comment = fields[0][1:].split()
+    seq_id_opt, comment_opt = fields[2][1:].split()
+    if seq_id:
+        assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id)
+        assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id_opt)
+    if comment:
+        assert all(33 <= ord(c) <= MAX_ASCII for c in comment)
+        assert all(33 <= ord(c) <= MAX_ASCII for c in comment_opt)
 
     sequence = fields[1]
     assert all(c in "ACGT" for c in sequence)
 
     seq_qual_sep = fields[2][0]
     assert seq_qual_sep == "+"
-
-    additional_description = fields[2][1:]
-    assert all(c not in ">@" for c in additional_description)
-    assert " " in header
 
     quality = fields[-1]
     assert all(33 <= ord(c) <= MAX_ASCII for c in quality)

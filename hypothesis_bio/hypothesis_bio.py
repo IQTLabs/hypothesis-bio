@@ -262,12 +262,16 @@ def fasta(draw) -> str:
 
 @composite
 def sequence_id(
-    draw, blacklist_characters: Sequence[str] = ">@", max_size: int = 100
+    draw,
+    blacklist_characters: Sequence[str] = "",
+    min_size: int = 1,
+    max_size: int = 100,
 ) -> str:
     """Generates a sequence ID.
 
     Arguments:
     - `blacklist_characters`: Characters to not include in the sequence ID.
+    - `min_size`: Minimum length of the sequence ID.
     - `max_size`: Maximum length of the sequence ID.
     """
     return draw(
@@ -277,6 +281,7 @@ def sequence_id(
                 min_codepoint=33,
                 max_codepoint=MAX_ASCII,
             ),
+            min_size=min_size,
             max_size=max_size,
         )
     )
