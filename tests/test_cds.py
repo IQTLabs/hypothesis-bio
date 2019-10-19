@@ -36,3 +36,8 @@ def test_size_with_codon():
 @given(cds(max_size=10))
 def test_max_size(seq):
     assert len(seq) <= 10
+
+
+@given(cds())
+def test_length(seq):
+    assert len(seq) % 3 == 0
