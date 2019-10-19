@@ -7,7 +7,15 @@ from typing import Optional, Sequence
 
 from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
-from hypothesis.strategies import characters, composite, integers, sampled_from, text
+from hypothesis.strategies import (
+    characters,
+    composite,
+    datetimes,
+    from_regex,
+    integers,
+    sampled_from,
+    text,
+)
 
 from .utilities import (
     ambiguous_start_codons,
@@ -294,13 +302,17 @@ def kmers(draw, seq: str, k: int) -> str:
 
 
 @composite
-def sequence_id(
-    draw, blacklist_characters: Sequence[str] = ">@", max_size: int = 100
+def sequence_identifier(
+    draw,
+    blacklist_characters: Sequence[str] = "",
+    min_size: int = 1,
+    max_size: int = 100,
 ) -> str:
-    """Generates a sequence ID.
+    """Generates a sequence identifier.
 
     Arguments:
     - `blacklist_characters`: Characters to not include in the sequence ID.
+    - `min_size`: Minimum length of the sequence ID.
     - `max_size`: Maximum length of the sequence ID.
     """
     return draw(
@@ -310,14 +322,94 @@ def sequence_id(
                 min_codepoint=33,
                 max_codepoint=MAX_ASCII,
             ),
+            min_size=min_size,
             max_size=max_size,
         )
     )
 
 
 @composite
+def illumina_sequence_identifier(draw) -> str:
+    """Generate an Illumina-style sequence identifier.
+
+    ::: tip Note
+    Specifications taken from Specifications taken from [here](https://support.illumina.com/help/BaseSpace_Sequence_Hub/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm)
+    :::
+    """
+    delim = ":"
+    instrument = draw(from_regex(r"[a-zA-Z0-9_]+", fullmatch=True))
+    run_number = draw(integers(min_value=0))
+    flowcell_id = draw(from_regex(r"[a-zA-Z0-9]+", fullmatch=True))
+    lane = draw(integers(min_value=0))
+    tile = draw(integers(min_value=0))
+    x_pos = draw(integers(min_value=0))
+    y_pos = draw(integers(min_value=0))
+    umi = draw(from_regex(r"[ACGTN]+\+[ACGTN]+", fullmatch=True))
+    read_num = draw(from_regex(r"[12]", fullmatch=True))
+    is_filtered = draw(from_regex(r"[YN]", fullmatch=True))
+    control_num = draw(integers(min_value=0))
+    assume(control_num % 2 == 0)  # control_num must be 0 or even
+    index = draw(from_regex(r"[ACGTN]+", fullmatch=True))
+
+    return (
+        "{instrument}{delim}{run_number}{delim}{flowcell_id}{delim}{lane}{delim}"
+        "{tile}{delim}{x_pos}{delim}{y_pos}{delim}{umi} {read_num}{delim}"
+        "{is_filtered}{delim}{control_num}{delim}{index}"
+    ).format(
+        instrument=instrument,
+        delim=delim,
+        run_number=run_number,
+        flowcell_id=flowcell_id,
+        lane=lane,
+        tile=tile,
+        x_pos=x_pos,
+        y_pos=y_pos,
+        umi=umi,
+        read_num=read_num,
+        is_filtered=is_filtered,
+        control_num=control_num,
+        index=index,
+    )
+
+
+@composite
+def nanopore_sequence_identifier(draw) -> str:
+    """Generate a Nanopore-style sequence identifier.
+
+    ::: tip Note
+        No formal specifications could be found, so am going off a header produced from
+        `Guppy` v2.1.3: @db127b21-9336-4052-8a8e-5b5d6ac0e3be runid=700c35056d5bf4191f3f9ade0cb342d8406f8ea4 sampleid=madagascar_tb_mdr_3 read=20199 ch=214 start_time=2018-02-26T21:39:56Z
+    :::
+    """
+    read_id = draw(
+        from_regex(
+            r"[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}",
+            fullmatch=True,
+        )
+    )
+    run_id = draw(from_regex(r"[a-zA-Z0-9]{40}", fullmatch=True))
+    sample_id = draw(from_regex(r"[!-~]+", fullmatch=True))
+    read_num = draw(integers(min_value=0))
+    channel = draw(integers(min_value=0))
+    date_time = draw(datetimes())
+    start_time = date_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return (
+        "{read_id} runid={run_id} sampleid={sample_id} read={read_num} "
+        "ch={channel} start_time={start_time}"
+    ).format(
+        read_id=read_id,
+        run_id=run_id,
+        sample_id=sample_id,
+        read_num=read_num,
+        channel=channel,
+        start_time=start_time,
+    )
+
+
+@composite
 def fastq_quality(
-    draw, size=0, min_score: int = 0, max_score: int = 62, offset: int = 64
+    draw, size=0, min_score: int = 0, max_score: int = 93, offset: int = 33
 ) -> str:
     """Generates the quality string for the FASTQ format
 
@@ -327,9 +419,13 @@ def fastq_quality(
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset.
 
-    Note:
-        See <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/> for more details on
-        the quality score encoding.
+    ::: tip Note
+        The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
+        then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
+        then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
+        See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on
+        the FASTQ format (and its quality score encoding).
+    :::
     """
     min_codepoint = min_score + offset
     max_codepoint = max_score + offset
@@ -357,10 +453,12 @@ def fastq(
     draw,
     size=0,
     min_score: int = 0,
-    max_score: int = 62,
-    offset: int = 64,
-    add_comment: bool = True,
+    max_score: int = 93,
+    offset: int = 33,
+    sequence_source: SearchStrategy = None,
+    identifier_source: SearchStrategy = None,
     additional_description: bool = True,
+    wrap_length: int = 80,
 ) -> str:
     """Generate strings representing sequences in FASTQ format.
 
@@ -369,35 +467,42 @@ def fastq(
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset for quality string.
-    - `add_comment`: Add a comment string after the sequence ID, separated by a space.
+    - `sequence_source`: Search strategy to generate the sequence from. By default
+    [`dna()`](#dna) will be used.
+    - `identifier_source`: Search strategy to generate the sequence identifier from. If
+    `None` then random text will be generated.
     - `additional_description`: Add sequence ID and comment after `+` on third line.
+    - `wrap_length`: Number of characters to wrap the sequence and quality strings on. Set
+    to 0 to disable wrapping.
 
-    Note:
-        See <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/> for more details on
+    ::: tip Note
+        The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
+        then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
+        then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
+        See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on
         the FASTQ format (and its quality score encoding).
+    :::
     """
-    seq_id = draw(sequence_id())
-    sequence = draw(
-        dna(
-            allow_ambiguous=False,
-            allow_gaps=False,
-            uppercase_only=True,
-            min_size=size,
-            max_size=size,
-        )
-    )
-    comment = " " + draw(sequence_id()) if add_comment else ""
+    if identifier_source is None:
+        identifier_source = sequence_identifier()
+    if sequence_source is None:
+        sequence_source = dna(min_size=size, max_size=size)
+
+    seq_id = draw(identifier_source)
+    sequence = draw(sequence_source)
+    assume(len(sequence) == size)
+
     quality = draw(
         fastq_quality(
             size=size, min_score=min_score, max_score=max_score, offset=offset
         )
     )
-    description = seq_id + comment if additional_description else ""
+    description = seq_id if additional_description else ""
 
-    return "@{seq_id}{comment}\n{sequence}\n+{description}\n{quality}".format(
-        seq_id=seq_id,
-        sequence=sequence,
-        comment=comment,
-        quality=quality,
-        description=description,
+    if wrap_length > 0:
+        sequence = fill(sequence, wrap_length, break_on_hyphens=False)
+        quality = fill(quality, wrap_length, break_on_hyphens=False)
+
+    return "@{seq_id}\n{sequence}\n+{description}\n{quality}".format(
+        seq_id=seq_id, sequence=sequence, quality=quality, description=description
     )
