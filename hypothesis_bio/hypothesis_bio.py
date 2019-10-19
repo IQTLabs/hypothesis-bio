@@ -332,9 +332,9 @@ def sequence_identifier(
 def illumina_sequence_identifier(draw) -> str:
     """Generate an Illumina-style sequence identifier.
 
-
-    Notes:
-        Specifications taken from [here](https://support.illumina.com/help/BaseSpace_Sequence_Hub/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm)
+    ::: tip Note
+    Specifications taken from Specifications taken from [here](https://support.illumina.com/help/BaseSpace_Sequence_Hub/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm)
+    :::
     """
     delim = ":"
     instrument = draw(from_regex(r"[a-zA-Z0-9_]+", fullmatch=True))
@@ -376,9 +376,10 @@ def illumina_sequence_identifier(draw) -> str:
 def nanopore_sequence_identifier(draw) -> str:
     """Generate a Nanopore-style sequence identifier.
 
-    Note:
+    ::: tip Note
         No formal specifications could be found, so am going off a header produced from
         `Guppy` v2.1.3: @db127b21-9336-4052-8a8e-5b5d6ac0e3be runid=700c35056d5bf4191f3f9ade0cb342d8406f8ea4 sampleid=madagascar_tb_mdr_3 read=20199 ch=214 start_time=2018-02-26T21:39:56Z
+    :::
     """
     read_id = draw(
         from_regex(
@@ -418,12 +419,13 @@ def fastq_quality(
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset.
 
-    Note:
+    ::: tip Note
         The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
         then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
         then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
         See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on
         the FASTQ format (and its quality score encoding).
+    :::
     """
     min_codepoint = min_score + offset
     max_codepoint = max_score + offset
@@ -473,12 +475,13 @@ def fastq(
     - `wrap_length`: Number of characters to wrap the sequence and quality strings on. Set
     to 0 to disable wrapping.
 
-    Note:
+    ::: tip Note
         The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
         then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
         then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
         See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on
         the FASTQ format (and its quality score encoding).
+    :::
     """
     if identifier_source is None:
         identifier_source = sequence_identifier()
