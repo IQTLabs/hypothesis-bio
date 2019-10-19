@@ -50,9 +50,9 @@ def dna(
 @composite
 def rna(
     draw,
-    allow_ambiguous=False,
-    allow_gaps=False,
-    allow_lowercase=False,
+    allow_ambiguous=True,
+    allow_gaps=True,
+    allow_lowercase=True,
     min_size=0,
     max_size: Optional[int] = None,
 ):
