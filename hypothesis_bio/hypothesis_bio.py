@@ -197,7 +197,11 @@ def cds(
 
     # remove stop codons that aren't at the end if requested
     if not allow_internal_stop_codons:
-        for codon in range(3, len(sequence) - 3, 3):
+        for codon in range(
+            3 if include_start_codon else 0,
+            len(sequence) - (3 if include_stop_codon else 0),
+            3,
+        ):
             assume(sequence[codon : codon + 3].upper() not in ambiguous_start_codons)
 
     # now determine start/stop codons

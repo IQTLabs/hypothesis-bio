@@ -109,3 +109,21 @@ def test_min_size_equal_to_max_size():
 
     # if start and stop codons are included, there is no other codon in a 6-mer
     assert minimal(cds(min_size=6, max_size=6)) == "ATAAGA"
+
+
+def test_allow_internal_stop_codons():
+    assert (
+        minimal(
+            cds(
+                min_size=3,
+                allow_internal_stop_codons=False,
+                include_start_codon=False,
+                include_stop_codon=False,
+                allow_ambiguous=False,
+            ),
+            lambda x: all(
+                c not in ["AGA", "AGG", "TAA", "TAG", "TCA", "TGA", "TTA"] for c in x
+            ),
+        )
+        == "AAA"
+    )
