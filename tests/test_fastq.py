@@ -1,7 +1,9 @@
-from .minimal import minimal
-from hypothesis import errors, given
 import pytest
-from hypothesis_bio.hypothesis_bio import fastq, fastq_quality, MAX_ASCII
+from hypothesis import errors, given
+
+from hypothesis_bio.hypothesis_bio import MAX_ASCII, fastq, fastq_quality
+
+from .minimal import minimal
 
 
 def test_fastq_quality_smallest_example():
@@ -42,7 +44,6 @@ def test_fastq_quality_min_score_larger_than_max_score_raises_error():
 def test_fastq_quality_offset_causes_outside_ascii_range_raises_error():
     min_score = 100
     max_score = 101
-    offset = 200
     with pytest.raises(ValueError):
         minimal(fastq_quality(min_score=min_score, max_score=max_score))
 
@@ -81,7 +82,7 @@ def test_fastq_size_over_one(fastq_string: str):
 
 
 @given(fastq(size=10, add_comment=True, additional_description=False))
-def test_fastq_size_over_one_with_comment(fastq_string: str):
+def test_fastq_size_over_one_with_comment_no_additional_description(fastq_string: str):
     fields = fastq_string.split("\n")
     header_begin = fields[0][0]
     assert header_begin == "@"
@@ -117,7 +118,7 @@ def test_fastq_size_over_one_with_comment(fastq_string: str):
     assert seq_qual_sep == "+"
 
     additional_description = fields[2][1:]
-    assert all(c not in ">@" for c in header)
+    assert all(c not in ">@" for c in additional_description)
     assert " " in header
 
     quality = fields[-1]

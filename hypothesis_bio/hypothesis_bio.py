@@ -10,7 +10,6 @@ from hypothesis.strategies import characters, composite, integers, sampled_from,
 
 from .utilities import ambiguous_start_codons, ambiguous_stop_codons, protein_1to3
 
-
 MAX_ASCII = 126
 
 
