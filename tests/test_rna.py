@@ -28,36 +28,48 @@ def test_max_size(seq):
 
 
 def test_allow_gaps_smallest_example():
-    fn = lambda x: all(c not in ["A", "U", "C", "G"] for c in x)
-    seq = minimal(rna(min_size=1, allow_gaps=True), fn)
+    seq = minimal(
+        rna(min_size=1, allow_gaps=True),
+        lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
+    )
     assert seq == "-"
 
 
 def test_allow_gaps_2_mer():
-    fn = lambda x: all(c not in ["A", "U", "C", "G"] for c in x)
-    seq = minimal(rna(min_size=2, allow_gaps=True), fn)
+    seq = minimal(
+        rna(min_size=2, allow_gaps=True),
+        lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
+    )
     assert seq == "--"
 
 
 def test_allow_lowercase_smallest_example():
-    fn = lambda x: all(c not in ["A", "U", "C", "G"] for c in x)
-    seq = minimal(rna(min_size=1, allow_lowercase=True), fn)
+    seq = minimal(
+        rna(min_size=1, allow_lowercase=True),
+        lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
+    )
     assert seq == "a"
 
 
 def test_allow_lowercase_2_mer():
-    fn = lambda x: all(c not in ["A", "U", "C", "G"] for c in x)
-    seq = minimal(rna(min_size=2, allow_lowercase=True), fn)
+    seq = minimal(
+        rna(min_size=2, allow_lowercase=True),
+        lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
+    )
     assert seq == "aa"
 
 
 def test_allow_ambiguous_smallest_example():
-    fn = lambda x: all(c not in ["A", "U", "C", "G"] for c in x)
-    seq = minimal(rna(min_size=1, allow_ambiguous=True), fn)
+    seq = minimal(
+        rna(min_size=1, allow_ambiguous=True),
+        lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
+    )
     assert seq == "B"
 
 
 def test_allow_ambiguous_2_mer():
-    fn = lambda x: all(c not in ["A", "U", "C", "G"] for c in x)
-    seq = minimal(rna(min_size=2, allow_ambiguous=True), fn)
+    seq = minimal(
+        rna(min_size=2, allow_ambiguous=True),
+        lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
+    )
     assert seq == "BB"
