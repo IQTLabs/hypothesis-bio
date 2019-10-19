@@ -89,7 +89,7 @@ def protein(
 
 
 @composite
-def start_codon(draw: Callable, allow_ambiguous=True) -> str:
+def start_codon(draw, allow_ambiguous=True) -> str:
     """Strategy to generate [start codons](https://en.wikipedia.org/wiki/Start_codon).
 
     Arguments:
@@ -101,7 +101,7 @@ def start_codon(draw: Callable, allow_ambiguous=True) -> str:
 
 
 @composite
-def stop_codon(draw: Callable, allow_ambiguous=True) -> str:
+def stop_codon(draw, allow_ambiguous=True) -> str:
     """Strategy to generate [stop codons](https://en.wikipedia.org/wiki/Stop_codon).
 
     Arguments:
@@ -112,7 +112,7 @@ def stop_codon(draw: Callable, allow_ambiguous=True) -> str:
 
 @composite
 def cds(
-    draw: Callable,
+    draw,
     include_start_codon=True,
     include_stop_codon=True,
     allow_internal_stop_codons=True,
