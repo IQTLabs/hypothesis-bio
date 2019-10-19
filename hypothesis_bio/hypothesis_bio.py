@@ -219,7 +219,6 @@ def fasta(
     draw,
     comment_source: SearchStrategy = None,
     sequence_source: SearchStrategy = None,
-    wrap_lines=True,
     wrap_length: Optional[int] = None,
     allow_windows_line_endings=True,
 ) -> str:
@@ -232,16 +231,13 @@ def fasta(
     comment = draw(comment_source)
     sequence = draw(sequence_source)
 
-    if not wrap_lines and wrap_length is not None:
-        raise ValueError("Can't have wrap length if not wrapping")
-
     # the nice case where the user gave the wrap size
-    if wrap_lines and wrap_length is not None:
+    if wrap_length is not None:
         sequence = wrap(sequence, width=wrap_length)
         sequence = "\n".join(sequence)
 
     # the pathological case
-    elif wrap_lines and wrap_length is None:
+    elif wrap_length is None:
 
         # choose where to wrap
         indices = [
