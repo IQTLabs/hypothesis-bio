@@ -48,6 +48,33 @@ def dna(
 
 
 @composite
+def rna(
+    draw,
+    allow_ambiguous=True,
+    allow_gaps=True,
+    allow_lowercase=False,
+    min_size=0,
+    max_size: Optional[int] = None,
+):
+    """Generates RNA sequences.
+
+    Arguments:
+    - `allow_ambiguous`: Whether ambiguous bases are permitted.
+    - `allow_gaps`: Whether a `-` may be in the RNA sequence.
+    - `allow_lowercase`: Whether lowercase characters should be used.
+    - `min_size`: The shortest RNA sequence to generate
+    - `max_size`: The longest RNA sequence to generate
+    """
+
+    chars = "AUCG" if not allow_ambiguous else "AUCGTWSMKRYBDHVN"
+    if allow_lowercase:
+        chars += chars.lower()
+    chars += "-" if allow_gaps else ""
+
+    return draw(text(alphabet=chars, min_size=min_size, max_size=max_size))
+
+
+@composite
 def protein(
     draw,
     allow_extended=False,
