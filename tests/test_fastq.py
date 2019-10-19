@@ -5,7 +5,7 @@ from hypothesis_bio.hypothesis_bio import (
     MAX_ASCII,
     fastq,
     fastq_quality,
-    illumina_sequence_id,
+    illumina_sequence_identifier,
     nanopore_sequence_identifier,
     protein,
 )
@@ -114,7 +114,7 @@ def test_fastq_size_over_one_with_comment_no_additional_description(fastq_string
     assert all(33 <= ord(c) <= MAX_ASCII for c in quality)
 
 
-@given(fastq(size=10, identifier_source=illumina_sequence_id()))
+@given(fastq(size=10, identifier_source=illumina_sequence_identifier()))
 def test_fastq_size_over_one_with_illumina_id(fastq_string: str):
     fields = fastq_string.split("\n")
     header_begin = fields[0][0]
@@ -163,13 +163,13 @@ def test_fastq_minimal_protein_source():
 
 
 def test_illumina_seq_id_minimal():
-    actual = minimal(illumina_sequence_id())
+    actual = minimal(illumina_sequence_identifier())
     expected = "0:0:0:0:0:0:0:A+A 1:N:0:A"
 
     assert actual == expected
 
 
-@given(illumina_sequence_id())
+@given(illumina_sequence_identifier())
 def test_illumina_seq_id_ensure_control_num_is_even_or_zero(seq_id):
     control_num = int(seq_id.split(":")[-2])
 

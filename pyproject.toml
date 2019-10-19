@@ -23,7 +23,7 @@ classifiers = [
 requires = [
     "hypothesis >= 4.0.0"
 ]
-requires-python = ">=3.6"
+requires-python = ">=3.5"
 description-file = "README.md"
 
 [tool.flit.metadata.requires-extra]

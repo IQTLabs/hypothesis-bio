@@ -3,7 +3,7 @@
 """Main module."""
 
 from textwrap import fill
-from typing import Dict, Optional, Sequence
+from typing import Optional, Sequence
 
 from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
@@ -120,8 +120,8 @@ def protein(
     else:
         sequence_3 = ""
         for s in sequence:
-            sequence_3 += protein_1to3[s]
-        return sequence_3
+            sequence_3 += protein_1to3[s.upper()]
+        return sequence_3.upper() if uppercase_only else sequence_3
 
 
 @composite
@@ -206,7 +206,11 @@ def cds(
 
     # remove stop codons that aren't at the end if requested
     if not allow_internal_stop_codons:
-        for codon in range(3, len(sequence) - 3, 3):
+        for codon in range(
+            3 if include_start_codon else 0,
+            len(sequence) - (3 if include_stop_codon else 0),
+            3,
+        ):
             assume(sequence[codon : codon + 3].upper() not in ambiguous_start_codons)
 
     # now determine start/stop codons
@@ -223,9 +227,21 @@ def cds(
 
 
 @composite
-def parsed_fasta(
-    draw, comment_source: SearchStrategy = None, sequence_source: SearchStrategy = None
-) -> Dict[str, str]:
+def fasta(
+    draw,
+    comment_source: SearchStrategy = None,
+    sequence_source: SearchStrategy = None,
+    wrap_length: Optional[int] = None,
+    allow_windows_line_endings=True,
+) -> str:
+    """Generates FASTA sequences.
+
+    Arguments:
+    - `comment_source`: The source of the comments. Defaults to `text(alphabet=characters(min_codepoint=32, max_codepoint=126))`)
+    - `sequence_source`: The source of the sequence. Defaults to [`dna`](#dna).
+    - `wrap_length`: The width to wrap the sequence on. If `None`, mixed sizes are used.
+    - `allow_windows_line_endings`: Whether to allow `\\r\\n` in the linebreaks.
+    """
     if comment_source is None:
         comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))
     if sequence_source is None:
@@ -233,11 +249,35 @@ def parsed_fasta(
 
     comment = draw(comment_source)
     sequence = draw(sequence_source)
-    return {
-        "fasta": ">" + comment + "\n" + sequence,
-        "comment": comment,
-        "sequence": sequence,
-    }
+
+    # the nice case where the user gave the wrap size
+    if wrap_length is not None:
+        sequence = fill(sequence, wrap_length)
+
+    # the pathological case
+    elif wrap_length is None:
+
+        # choose where to wrap
+        indices = [
+            draw(integers(min_value=0, max_value=len(sequence)))
+            for i in range(draw(integers(min_value=0, max_value=len(sequence))))
+        ]
+        indices = list(set(indices))
+
+        # randomly put in the line endings
+        for index in indices:
+            line_ending = (
+                draw(sampled_from(["\r\n", "\n"]))
+                if allow_windows_line_endings
+                else "\n"
+            )
+            sequence = sequence[:index] + line_ending + sequence[index:]
+
+    # sanity checks
+    assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
+    assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
+
+    return ">" + comment + "\n" + sequence
 
 
 @composite
@@ -259,13 +299,6 @@ def kmers(draw, seq: str, k: int) -> str:
     kmer_index = draw(integers(min_value=0, max_value=len(seq) - k))
     kmer = seq[kmer_index : kmer_index + k]
     return kmer
-
-
-@composite
-def fasta(draw) -> str:
-    """Generate strings representing sequences in FASTA format.
-    """
-    return draw(parsed_fasta())["fasta"]
 
 
 @composite
@@ -296,7 +329,7 @@ def sequence_identifier(
 
 
 @composite
-def illumina_sequence_id(draw) -> str:
+def illumina_sequence_identifier(draw) -> str:
     """Generate an Illumina-style sequence identifier.
 
 
