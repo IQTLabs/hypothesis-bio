@@ -241,7 +241,6 @@ def fasta(
     # the nice case where the user gave the wrap size
     if wrap_length is not None:
         sequence = fill(sequence, wrap_length)
-        sequence = "\n".join(sequence)
 
     # the pathological case
     elif wrap_length is None:
