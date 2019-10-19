@@ -2,7 +2,7 @@
 
 """Main module."""
 
-import textwrap
+from textwrap import fill
 from typing import Dict, Optional, Sequence
 
 from hypothesis import assume
@@ -269,13 +269,13 @@ def fasta(draw) -> str:
 
 
 @composite
-def sequence_id(
+def sequence_identifier(
     draw,
     blacklist_characters: Sequence[str] = "",
     min_size: int = 1,
     max_size: int = 100,
 ) -> str:
-    """Generates a sequence ID.
+    """Generates a sequence identifier.
 
     Arguments:
     - `blacklist_characters`: Characters to not include in the sequence ID.
@@ -340,7 +340,7 @@ def illumina_sequence_id(draw) -> str:
 
 
 @composite
-def nanopore_sequence_id(draw) -> str:
+def nanopore_sequence_identifier(draw) -> str:
     """Generate a Nanopore-style sequence identifier.
 
     Note:
@@ -420,9 +420,10 @@ def fastq(
     min_score: int = 0,
     max_score: int = 93,
     offset: int = 33,
-    add_comment: bool = True,
+    sequence_source: SearchStrategy = None,
+    identifier_source: SearchStrategy = None,
     additional_description: bool = True,
-    wrapped: int = 80,
+    wrap_length: int = 80,
 ) -> str:
     """Generate strings representing sequences in FASTQ format.
 
@@ -431,9 +432,12 @@ def fastq(
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset for quality string.
-    - `add_comment`: Add a comment string after the sequence ID, separated by a space.
+    - `sequence_source`: Search strategy to generate the sequence from. By default
+    [`dna()`](#dna) will be used.
+    - `identifier_source`: Search strategy to generate the sequence identifier from. If
+    `None` then random text will be generated.
     - `additional_description`: Add sequence ID and comment after `+` on third line.
-    - `wrapped`: Number of characters to wrap the sequence and quality strings on. Set
+    - `wrap_length`: Number of characters to wrap the sequence and quality strings on. Set
     to 0 to disable wrapping.
 
     Note:
@@ -443,32 +447,26 @@ def fastq(
         See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on
         the FASTQ format (and its quality score encoding).
     """
-    seq_id = draw(sequence_id())
-    sequence = draw(
-        dna(
-            allow_ambiguous=False,
-            allow_gaps=False,
-            uppercase_only=True,
-            min_size=size,
-            max_size=size,
-        )
-    )
-    comment = " " + draw(sequence_id()) if add_comment else ""
+    if identifier_source is None:
+        identifier_source = sequence_identifier()
+    if sequence_source is None:
+        sequence_source = dna(min_size=size, max_size=size)
+
+    seq_id = draw(identifier_source)
+    sequence = draw(sequence_source)
+    assume(len(sequence) == size)
+
     quality = draw(
         fastq_quality(
             size=size, min_score=min_score, max_score=max_score, offset=offset
         )
     )
-    description = seq_id + comment if additional_description else ""
+    description = seq_id if additional_description else ""
 
-    if wrapped > 0:
-        sequence = textwrap.fill(sequence, wrapped)
-        quality = textwrap.fill(quality, wrapped)
+    if wrap_length > 0:
+        sequence = fill(sequence, wrap_length, break_on_hyphens=False)
+        quality = fill(quality, wrap_length, break_on_hyphens=False)
 
-    return "@{seq_id}{comment}\n{sequence}\n+{description}\n{quality}".format(
-        seq_id=seq_id,
-        sequence=sequence,
-        comment=comment,
-        quality=quality,
-        description=description,
+    return "@{seq_id}\n{sequence}\n+{description}\n{quality}".format(
+        seq_id=seq_id, sequence=sequence, quality=quality, description=description
     )

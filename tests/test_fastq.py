@@ -6,7 +6,8 @@ from hypothesis_bio.hypothesis_bio import (
     fastq,
     fastq_quality,
     illumina_sequence_id,
-    nanopore_sequence_id,
+    nanopore_sequence_identifier,
+    protein,
 )
 
 from .minimal import minimal
@@ -56,14 +57,14 @@ def test_fastq_quality_offset_causes_outside_ascii_range_raises_error():
 
 def test_fastq_smallest_example():
     actual = minimal(fastq())
-    expected = "@0 0\n\n+0 0\n"
+    expected = "@0\n\n+0\n"
 
     assert actual == expected
 
 
 def test_fastq_smallest_non_empty():
     actual = minimal(fastq(size=1))
-    expected = "@0 0\nA\n+0 0\n0"
+    expected = "@0\nA\n+0\n0"
 
     assert actual == expected
 
@@ -74,17 +75,14 @@ def test_fastq_size_over_one(fastq_string: str):
     header_begin = fields[0][0]
     assert header_begin == "@"
 
-    seq_id, comment = fields[0][1:].split()
-    seq_id_opt, comment_opt = fields[2][1:].split()
+    seq_id = fields[0][1:]
+    seq_id_opt = fields[2][1:]
     if seq_id:
         assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id)
         assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id_opt)
-    if comment:
-        assert all(33 <= ord(c) <= MAX_ASCII for c in comment)
-        assert all(33 <= ord(c) <= MAX_ASCII for c in comment_opt)
 
     sequence = fields[1]
-    assert all(c in "ACGT" for c in sequence)
+    assert len(sequence) == 10
 
     seq_qual_sep = fields[2][0]
     assert seq_qual_sep == "+"
@@ -99,42 +97,36 @@ def test_fastq_size_over_one_with_comment_no_additional_description(fastq_string
     header_begin = fields[0][0]
     assert header_begin == "@"
 
-    seq_id, comment = fields[0][1:].split()
+    seq_id = fields[0][1:]
     if seq_id:
         assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id)
-    if comment:
-        assert all(33 <= ord(c) <= MAX_ASCII for c in comment)
 
     sequence = fields[1]
-    assert all(c in "ACGT" for c in sequence)
+    assert len(sequence) == 10
 
     seq_qual_sep = fields[2][0]
     assert seq_qual_sep == "+"
 
-    optional_description = fields[2][1:].split()
+    optional_description = fields[2][1:]
     assert not optional_description
 
     quality = fields[-1]
     assert all(33 <= ord(c) <= MAX_ASCII for c in quality)
 
 
-@given(fastq(size=10))
-def test_fastq_size_over_one_with_comment(fastq_string: str):
+@given(fastq(size=10, identifier_source=illumina_sequence_id()))
+def test_fastq_size_over_one_with_illumina_id(fastq_string: str):
     fields = fastq_string.split("\n")
     header_begin = fields[0][0]
     assert header_begin == "@"
 
-    seq_id, comment = fields[0][1:].split()
-    seq_id_opt, comment_opt = fields[2][1:].split()
-    if seq_id:
-        assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id)
-        assert all(33 <= ord(c) <= MAX_ASCII for c in seq_id_opt)
-    if comment:
-        assert all(33 <= ord(c) <= MAX_ASCII for c in comment)
-        assert all(33 <= ord(c) <= MAX_ASCII for c in comment_opt)
+    seq_id = fields[0][1:]
+    assert len(seq_id.split(":")) == 11
+    seq_id_opt = fields[2][1:]
+    assert len(seq_id_opt.split(":")) == 11
 
     sequence = fields[1]
-    assert all(c in "ACGT" for c in sequence)
+    assert len(sequence) == 10
 
     seq_qual_sep = fields[2][0]
     assert seq_qual_sep == "+"
@@ -143,22 +135,29 @@ def test_fastq_size_over_one_with_comment(fastq_string: str):
     assert all(33 <= ord(c) <= MAX_ASCII for c in quality)
 
 
-@given(fastq(size=10, wrapped=3))
+@given(fastq(size=10, wrap_length=3))
 def test_fastq_wrapping_less_than_size_wraps_seq_and_quality(fastq_string: str):
     fields = fastq_string.split("\n")
 
     actual = len(fields)
     expected = 10
 
-    assert actual == expected
+    assert actual == expected, fastq_string
 
 
-@given(fastq(size=10, wrapped=30))
+@given(fastq(size=10, wrap_length=30))
 def test_fastq_wrapping_greater_than_size_doesnt_wrap(fastq_string: str):
     fields = fastq_string.split("\n")
 
     actual = len(fields)
     expected = 4
+
+    assert actual == expected
+
+
+def test_fastq_minimal_protein_source():
+    actual = minimal(fastq(size=1, sequence_source=protein()))
+    expected = "@0\nA\n+0\n0"
 
     assert actual == expected
 
@@ -178,7 +177,7 @@ def test_illumina_seq_id_ensure_control_num_is_even_or_zero(seq_id):
 
 
 def test_nanopore_seq_id_minimal():
-    actual = minimal(nanopore_sequence_id())
+    actual = minimal(nanopore_sequence_identifier())
     expected = (
         "00000000-0000-0000-0000-000000000000 "
         "runid={} "
