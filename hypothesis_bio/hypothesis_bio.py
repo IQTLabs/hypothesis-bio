@@ -222,7 +222,14 @@ def fasta(
     wrap_length: Optional[int] = None,
     allow_windows_line_endings=True,
 ) -> str:
+    """Generates FASTA sequences.
 
+    Arguments:
+    - `comment_source`: The source of the comments. Defaults to `text(alphabet=characters(min_codepoint=32, max_codepoint=126))`)
+    - `sequence_source`: The source of the sequence. Defaults to [`dna`](#dna).
+    - `wrap_length`: The width to wrap the sequence on. If `None`, mixed sizes are used.
+    - `allow_windows_line_endings`: Whether to allow `\\r\\n` in the linebreaks.
+    """
     if comment_source is None:
         comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))
     if sequence_source is None:
