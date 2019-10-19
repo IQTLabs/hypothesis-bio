@@ -323,10 +323,11 @@ def fastq(
     draw,
     size=0,
     min_score: int = 0,
-    max_score: int = 62,
-    offset: int = 64,
+    max_score: int = 93,
+    offset: int = 33,
     add_comment: bool = True,
     additional_description: bool = True,
+    wrapped: int = 80,
 ) -> str:
     """Generate strings representing sequences in FASTQ format.
 
@@ -337,9 +338,14 @@ def fastq(
     - `offset`: ASCII encoding offset for quality string.
     - `add_comment`: Add a comment string after the sequence ID, separated by a space.
     - `additional_description`: Add sequence ID and comment after `+` on third line.
+    - `wrapped`: Number of characters to wrap the sequence and quality strings on. Set
+    to 0 to disable wrapping.
 
     Note:
-        See <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/> for more details on
+        The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
+        then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
+        then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
+        See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on
         the FASTQ format (and its quality score encoding).
     """
     seq_id = draw(sequence_id())
