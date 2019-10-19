@@ -84,7 +84,8 @@ def protein(
     else:
         sequence_3 = ""
         for s in sequence:
-            sequence_3 += protein_1to3[s]
+            s_uppercase = s.upper()
+            sequence_3 += protein_1to3[s_uppercase]
         return sequence_3
 
 

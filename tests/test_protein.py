@@ -1,9 +1,10 @@
+from unittest.mock import Mock
+
 from hypothesis import given
 
 from hypothesis_bio import protein
 
 from .minimal import minimal
-from unittest.mock import Mock
 
 
 @given(protein())
@@ -50,7 +51,8 @@ def test_max_size_3_letter_abbrv():
     assert len(seq) % 3 == 0
 
 
-# unwraps a function wrapped with the @composite decorator - this is horrible, should be refactored
+# unwraps a function wrapped with the @composite decorator
+# TODO: this does not seem good and does not seem portable. Find a better way to unwrap functions out of decorators
 def get_unwrapped_function_from_composite_decorator(function):
     accept_function = function.__wrapped__
     composite_strategy = accept_function()
@@ -59,23 +61,22 @@ def get_unwrapped_function_from_composite_decorator(function):
 
 
 def test_protein__ACD_is_drawn_returns_AlaCysAsp():
-    # setup
     draw_mock = Mock(return_value="ACD")
-    original_protein = get_unwrapped_function_from_composite_decorator(protein)
+    unwrapped_protein = get_unwrapped_function_from_composite_decorator(protein)
 
-    # call
-    actual = original_protein(draw_mock, single_letter_protein=False) # the others params do not matter as "ACD" is always drawn regardless of what is passed
+    actual = unwrapped_protein(
+        draw_mock, single_letter_protein=False
+    )  # the others params do not matter as "ACD" is always drawn regardless of what is passed
 
-    # assert
     expected = "AlaCysAsp"
     assert actual == expected
 
 
 def test_protein__acd_is_drawn_returns_AlaCysAsp():
     draw_mock = Mock(return_value="acd")
-    original_protein = get_unwrapped_function_from_composite_decorator(protein)
+    unwrapped_protein = get_unwrapped_function_from_composite_decorator(protein)
 
-    actual = original_protein(draw_mock, single_letter_protein=False)
+    actual = unwrapped_protein(draw_mock, single_letter_protein=False)
 
     expected = "AlaCysAsp"
-    assert actual == expected  # fails because utilities.protein_1to3 does not contain lowercase entries
+    assert actual == expected
