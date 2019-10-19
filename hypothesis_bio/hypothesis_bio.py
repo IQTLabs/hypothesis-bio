@@ -111,8 +111,8 @@ def protein(
     else:
         sequence_3 = ""
         for s in sequence:
-            sequence_3 += protein_1to3[s]
-        return sequence_3
+            sequence_3 += protein_1to3[s.upper()]
+        return sequence_3.upper() if uppercase_only else sequence_3
 
 
 @composite
