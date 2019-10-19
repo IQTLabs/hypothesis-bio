@@ -134,10 +134,20 @@ def cds(
     """
 
     # first, create the main DNA sequence
-    if include_start_codon and max_size is not None:
-        max_size -= 3
-    if include_stop_codon and max_size is not None:
-        max_size -= 3
+    if include_start_codon:
+        min_size -= 3
+        if max_size is not None:
+            max_size -= 3
+    if include_stop_codon:
+        min_size -= 3
+        if max_size is not None:
+            max_size -= 3
+
+    # make sure that the sizes are not negative
+    min_size = max(0, min_size)
+    if max_size is not None:
+        max_size = max(0, max_size)
+
     sequence = draw(
         dna(
             allow_ambiguous=allow_ambiguous,
