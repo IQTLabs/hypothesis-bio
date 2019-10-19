@@ -1,9 +1,9 @@
-# Welcome to Hypothesis-Bio!
+# Hypothesis-Bio
 
 [![Build status](https://github.com/Lab41/hypothesis-bio/workflows/CI/badge.svg)](https://github.com/Lab41/hypothesis-bio/actions)
 [![codecov](https://codecov.io/gh/Lab41/hypothesis-bio/branch/master/graph/badge.svg)](https://codecov.io/gh/Lab41/hypothesis-bio/)
 
-Hypothesis extension for computational biology
+Hypothesis-Bio is a [Hypothesis](https://github.com/HypothesisWorks/hypothesis) extension for property-based testing of biology software.
 
 ## Quick Start
 
