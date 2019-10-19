@@ -6,6 +6,7 @@ from hypothesis_bio.hypothesis_bio import (
     fastq,
     fastq_quality,
     illumina_sequence_id,
+    nanopore_sequence_id,
 )
 
 from .minimal import minimal
@@ -174,3 +175,17 @@ def test_illumina_seq_id_ensure_control_num_is_even_or_zero(seq_id):
     control_num = int(seq_id.split(":")[-2])
 
     assert control_num % 2 == 0
+
+
+def test_nanopore_seq_id_minimal():
+    actual = minimal(nanopore_sequence_id())
+    expected = (
+        "00000000-0000-0000-0000-000000000000 "
+        "runid={} "
+        "sampleid=0 "
+        "read=0 "
+        "ch=0 "
+        "start_time=2000-01-01T00:00:00Z"  # Examples from this strategy shrink towards midnight on January 1st 2000.
+    ).format("0" * 40)
+
+    assert actual == expected

@@ -10,6 +10,7 @@ from hypothesis.searchstrategy import SearchStrategy
 from hypothesis.strategies import (
     characters,
     composite,
+    datetimes,
     from_regex,
     integers,
     sampled_from,
@@ -335,6 +336,40 @@ def illumina_sequence_id(draw) -> str:
         is_filtered=is_filtered,
         control_num=control_num,
         index=index,
+    )
+
+
+@composite
+def nanopore_sequence_id(draw) -> str:
+    """Generate a Nanopore-style sequence identifier.
+
+    Note:
+        No formal specifications could be found, so am going off a header produced from
+        `Guppy` v2.1.3: @db127b21-9336-4052-8a8e-5b5d6ac0e3be runid=700c35056d5bf4191f3f9ade0cb342d8406f8ea4 sampleid=madagascar_tb_mdr_3 read=20199 ch=214 start_time=2018-02-26T21:39:56Z
+    """
+    read_id = draw(
+        from_regex(
+            r"[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}",
+            fullmatch=True,
+        )
+    )
+    run_id = draw(from_regex(r"[a-zA-Z0-9]{40}", fullmatch=True))
+    sample_id = draw(from_regex(r"[!-~]+", fullmatch=True))
+    read_num = draw(integers(min_value=0))
+    channel = draw(integers(min_value=0))
+    date_time = draw(datetimes())
+    start_time = date_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return (
+        "{read_id} runid={run_id} sampleid={sample_id} read={read_num} "
+        "ch={channel} start_time={start_time}"
+    ).format(
+        read_id=read_id,
+        run_id=run_id,
+        sample_id=sample_id,
+        read_num=read_num,
+        channel=channel,
+        start_time=start_time,
     )
 
 
