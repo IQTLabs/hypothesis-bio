@@ -3,6 +3,7 @@ from .minimal import minimal
 
 from hypothesis_bio import protein
 
+from unittest.mock import Mock
 
 @given(protein())
 def test_protein_type(seq):
@@ -46,3 +47,34 @@ def test_max_size_3_letter_abbrv():
     seq = minimal(protein(single_letter_protein=False, max_size=10))
     assert len(seq) <= 30
     assert len(seq) % 3 == 0
+
+
+# unwraps a function wrapped with the @composite decorator - this is horrible, should be refactored
+def get_unwrapped_function_from_composite_decorator(function):
+    accept_function = function.__wrapped__
+    composite_strategy = accept_function()
+    original_function = composite_strategy.definition
+    return original_function
+
+
+def test_protein__upper_case_protein_is_drawn__get_multi_letter_protein():
+    # setup
+    draw_mock = Mock(return_value="ACD")
+    original_protein = get_unwrapped_function_from_composite_decorator(protein)
+
+    # call
+    seq = original_protein(draw_mock, single_letter_protein=False) # the others params do not matter as "ACD" is always drawn regardless of what is passed
+
+    # assert
+    expected = "AlaCysAsp"
+    assert seq == expected
+
+
+def test_protein__lower_case_protein_is_drawn__get_multi_letter_protein():
+    draw_mock = Mock(return_value="acd")
+    original_protein = get_unwrapped_function_from_composite_decorator(protein)
+
+    seq = original_protein(draw_mock, single_letter_protein=False)
+
+    expected = "AlaCysAsp"
+    assert seq == expected  # fails because utilities.protein_1to3 does not contain lowercase entries
