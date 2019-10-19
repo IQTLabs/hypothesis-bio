@@ -1,9 +1,10 @@
 from hypothesis import given
-from .minimal import minimal
 
 from hypothesis_bio import protein
 
+from .minimal import minimal
 from unittest.mock import Mock
+
 
 @given(protein())
 def test_protein_type(seq):
