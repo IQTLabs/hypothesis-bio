@@ -29,7 +29,7 @@ def test_max_size(seq):
 
 def test_allow_gaps_smallest_example():
     seq = minimal(
-        rna(min_size=1, allow_gaps=True),
+        rna(min_size=1, allow_gaps=True, allow_ambiguous=False, allow_lowercase=False),
         lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
     )
     assert seq == "-"
@@ -37,7 +37,7 @@ def test_allow_gaps_smallest_example():
 
 def test_allow_gaps_2_mer():
     seq = minimal(
-        rna(min_size=2, allow_gaps=True),
+        rna(min_size=2, allow_gaps=True, allow_ambiguous=False, allow_lowercase=False),
         lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
     )
     assert seq == "--"
@@ -45,7 +45,7 @@ def test_allow_gaps_2_mer():
 
 def test_allow_lowercase_smallest_example():
     seq = minimal(
-        rna(min_size=1, allow_lowercase=True),
+        rna(min_size=1, allow_lowercase=True, allow_ambiguous=False, allow_gaps=False),
         lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
     )
     assert seq == "a"
@@ -53,7 +53,7 @@ def test_allow_lowercase_smallest_example():
 
 def test_allow_lowercase_2_mer():
     seq = minimal(
-        rna(min_size=2, allow_lowercase=True),
+        rna(min_size=2, allow_lowercase=True, allow_ambiguous=False, allow_gaps=False),
         lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
     )
     assert seq == "aa"
@@ -61,7 +61,7 @@ def test_allow_lowercase_2_mer():
 
 def test_allow_ambiguous_smallest_example():
     seq = minimal(
-        rna(min_size=1, allow_ambiguous=True),
+        rna(min_size=1, allow_ambiguous=True, allow_lowercase=False, allow_gaps=False),
         lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
     )
     assert seq == "B"
@@ -69,7 +69,7 @@ def test_allow_ambiguous_smallest_example():
 
 def test_allow_ambiguous_2_mer():
     seq = minimal(
-        rna(min_size=2, allow_ambiguous=True),
+        rna(min_size=2, allow_ambiguous=True, allow_lowercase=False, allow_gaps=False),
         lambda x: all(c not in ["A", "U", "C", "G"] for c in x),
     )
     assert seq == "BB"
