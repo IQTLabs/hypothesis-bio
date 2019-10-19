@@ -50,8 +50,8 @@ def dna(
 @composite
 def rna(
     draw,
-    allow_ambiguous=True,
-    allow_gaps=True,
+    allow_ambiguous=False,
+    allow_gaps=False,
     allow_lowercase=False,
     min_size=0,
     max_size: Optional[int] = None,
@@ -66,7 +66,7 @@ def rna(
     - `max_size`: The longest RNA sequence to generate
     """
 
-    chars = "AUCG" if not allow_ambiguous else "AUCGTWSMKRYBDHVN"
+    chars = "AUCG" if not allow_ambiguous else "AUCGNTWSMKRYBDHV"
     if allow_lowercase:
         chars += chars.lower()
     chars += "-" if allow_gaps else ""
