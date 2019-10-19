@@ -2,6 +2,7 @@
 
 """Main module."""
 
+import textwrap
 from typing import Dict, Optional, Sequence
 
 from hypothesis import assume
@@ -283,7 +284,7 @@ def sequence_id(
 
 @composite
 def fastq_quality(
-    draw, size=0, min_score: int = 0, max_score: int = 62, offset: int = 64
+    draw, size=0, min_score: int = 0, max_score: int = 93, offset: int = 33
 ) -> str:
     """Generates the quality string for the FASTQ format
 
@@ -294,8 +295,11 @@ def fastq_quality(
     - `offset`: ASCII encoding offset.
 
     Note:
-        See <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2847217/> for more details on
-        the quality score encoding.
+        The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
+        then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
+        then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
+        See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on
+        the FASTQ format (and its quality score encoding).
     """
     min_codepoint = min_score + offset
     max_codepoint = max_score + offset
@@ -365,6 +369,10 @@ def fastq(
         )
     )
     description = seq_id + comment if additional_description else ""
+
+    if wrapped > 0:
+        sequence = textwrap.fill(sequence, wrapped)
+        quality = textwrap.fill(quality, wrapped)
 
     return "@{seq_id}{comment}\n{sequence}\n+{description}\n{quality}".format(
         seq_id=seq_id,

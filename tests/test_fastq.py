@@ -15,21 +15,21 @@ def test_fastq_quality_smallest_example():
 
 def test_fastq_quality_smallest_non_empty_with_default_ascii():
     actual = minimal(fastq_quality(size=1))
-    expected = "@"
+    expected = "0"  # for some reason hypothesis shrinks towards 0 for unicodes
 
     assert actual == expected
 
 
 def test_fastq_quality_size_three_with_one_quality_score():
     actual = minimal(fastq_quality(size=3, min_score=5, max_score=5))
-    expected = "EEE"
+    expected = "&&&"
 
     assert actual == expected
 
 
 def test_fastq_quality_size_three_with_one_quality_score_and_sanger_offset():
-    actual = minimal(fastq_quality(size=3, min_score=5, max_score=5, offset=33))
-    expected = "&&&"
+    actual = minimal(fastq_quality(size=3, min_score=5, max_score=5, offset=64))
+    expected = "EEE"
 
     assert actual == expected
 
@@ -57,7 +57,7 @@ def test_fastq_smallest_example():
 
 def test_fastq_smallest_non_empty():
     actual = minimal(fastq(size=1))
-    expected = "@ \nA\n+ \n@"
+    expected = "@ \nA\n+ \n0"
 
     assert actual == expected
 
@@ -78,10 +78,10 @@ def test_fastq_size_over_one(fastq_string: str):
     assert seq_qual_sep == "+"
 
     quality = fields[-1]
-    assert all(64 <= ord(c) <= MAX_ASCII for c in quality)
+    assert all(33 <= ord(c) <= MAX_ASCII for c in quality)
 
 
-@given(fastq(size=10, add_comment=True, additional_description=False))
+@given(fastq(size=10, additional_description=False))
 def test_fastq_size_over_one_with_comment_no_additional_description(fastq_string: str):
     fields = fastq_string.split("\n")
     header_begin = fields[0][0]
@@ -98,10 +98,10 @@ def test_fastq_size_over_one_with_comment_no_additional_description(fastq_string
     assert seq_qual_sep == "+"
 
     quality = fields[-1]
-    assert all(64 <= ord(c) <= MAX_ASCII for c in quality)
+    assert all(33 <= ord(c) <= MAX_ASCII for c in quality)
 
 
-@given(fastq(size=10, add_comment=True, additional_description=True))
+@given(fastq(size=10))
 def test_fastq_size_over_one_with_comment(fastq_string: str):
     fields = fastq_string.split("\n")
     header_begin = fields[0][0]
@@ -122,4 +122,24 @@ def test_fastq_size_over_one_with_comment(fastq_string: str):
     assert " " in header
 
     quality = fields[-1]
-    assert all(64 <= ord(c) <= MAX_ASCII for c in quality)
+    assert all(33 <= ord(c) <= MAX_ASCII for c in quality)
+
+
+@given(fastq(size=10, wrapped=3))
+def test_fastq_wrapping_less_than_size_wraps_seq_and_quality(fastq_string: str):
+    fields = fastq_string.split("\n")
+
+    actual = len(fields)
+    expected = 10
+
+    assert actual == expected
+
+
+@given(fastq(size=10, wrapped=30))
+def test_fastq_wrapping_greater_than_size_doesnt_wrap(fastq_string: str):
+    fields = fastq_string.split("\n")
+
+    actual = len(fields)
+    expected = 4
+
+    assert actual == expected
