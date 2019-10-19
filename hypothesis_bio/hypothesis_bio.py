@@ -3,7 +3,7 @@
 """Main module."""
 
 from textwrap import wrap
-from typing import Dict, Optional, Sequence
+from typing import Optional, Sequence
 
 from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
@@ -222,7 +222,7 @@ def fasta(
     wrap_lines=True,
     wrap_length: Optional[int] = None,
     allow_windows_line_endings=True,
-) -> Dict[str, str]:
+) -> str:
 
     if comment_source is None:
         comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))
@@ -232,10 +232,14 @@ def fasta(
     comment = draw(comment_source)
     sequence = draw(sequence_source)
 
+    # the nice case where the user gave the wrap size
     if wrap_lines and wrap_length is not None:
         sequence = wrap(sequence, width=wrap_length)
+
+    # the pathological case
     elif wrap_lines and wrap_length is None:
 
+        # choose where to wrap
         indices = [
             draw(integers(min_value=0, max_value=len(sequence)))
             for i in range(draw(integers(min_value=0, max_value=len(sequence))))
@@ -251,14 +255,11 @@ def fasta(
             )
             sequence = sequence[:index] + line_ending + sequence[index:]
 
+    # sanity checks
     assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
     assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
 
-    return {
-        "fasta": ">" + comment + "\n" + sequence,
-        "comment": comment,
-        "sequence": sequence.replace("\n", "").replace("\r", ""),
-    }
+    return ">" + comment + "\n" + sequence
 
 
 @composite
