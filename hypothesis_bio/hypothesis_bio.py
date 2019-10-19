@@ -2,6 +2,7 @@
 
 """Main module."""
 
+from textwrap import wrap
 from typing import Dict, Optional, Sequence
 
 from hypothesis import assume
@@ -214,9 +215,15 @@ def cds(
 
 
 @composite
-def parsed_fasta(
-    draw, comment_source: SearchStrategy = None, sequence_source: SearchStrategy = None
+def fasta(
+    draw,
+    comment_source: SearchStrategy = None,
+    sequence_source: SearchStrategy = None,
+    wrap_lines=True,
+    wrap_length: Optional[int] = None,
+    allow_windows_line_endings=True,
 ) -> Dict[str, str]:
+
     if comment_source is None:
         comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))
     if sequence_source is None:
@@ -224,10 +231,33 @@ def parsed_fasta(
 
     comment = draw(comment_source)
     sequence = draw(sequence_source)
+
+    if wrap_lines and wrap_length is not None:
+        sequence = wrap(sequence, width=wrap_length)
+    elif wrap_lines and wrap_length is None:
+
+        indices = [
+            draw(integers(min_value=0, max_value=len(sequence)))
+            for i in range(draw(integers(min_value=0, max_value=len(sequence))))
+        ]
+        indices = list(set(indices))
+
+        # randomly put in the line endings
+        for index in indices:
+            line_ending = (
+                draw(sampled_from(["\r\n", "\n"]))
+                if allow_windows_line_endings
+                else "\n"
+            )
+            sequence = sequence[:index] + line_ending + sequence[index:]
+
+    assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
+    assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
+
     return {
         "fasta": ">" + comment + "\n" + sequence,
         "comment": comment,
-        "sequence": sequence,
+        "sequence": sequence.replace("\n", "").replace("\r", ""),
     }
 
 
@@ -250,13 +280,6 @@ def kmers(draw, seq: str, k: int) -> str:
     kmer_index = draw(integers(min_value=0, max_value=len(seq) - k))
     kmer = seq[kmer_index : kmer_index + k]
     return kmer
-
-
-@composite
-def fasta(draw) -> str:
-    """Generate strings representing sequences in FASTA format.
-    """
-    return draw(parsed_fasta())["fasta"]
 
 
 @composite
