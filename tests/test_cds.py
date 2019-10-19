@@ -42,7 +42,7 @@ def test_max_size(seq):
 
 
 @given(cds())
-def test_length(seq):
+def test_length_modulo_3(seq):
     assert len(seq) % 3 == 0
 
 
