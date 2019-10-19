@@ -57,24 +57,24 @@ def get_unwrapped_function_from_composite_decorator(function):
     return original_function
 
 
-def test_protein__upper_case_protein_is_drawn__get_multi_letter_protein():
+def test_protein__ACD_is_drawn_returns_AlaCysAsp():
     # setup
     draw_mock = Mock(return_value="ACD")
     original_protein = get_unwrapped_function_from_composite_decorator(protein)
 
     # call
-    seq = original_protein(draw_mock, single_letter_protein=False) # the others params do not matter as "ACD" is always drawn regardless of what is passed
+    actual = original_protein(draw_mock, single_letter_protein=False) # the others params do not matter as "ACD" is always drawn regardless of what is passed
 
     # assert
     expected = "AlaCysAsp"
-    assert seq == expected
+    assert actual == expected
 
 
-def test_protein__lower_case_protein_is_drawn__get_multi_letter_protein():
+def test_protein__acd_is_drawn_returns_AlaCysAsp():
     draw_mock = Mock(return_value="acd")
     original_protein = get_unwrapped_function_from_composite_decorator(protein)
 
-    seq = original_protein(draw_mock, single_letter_protein=False)
+    actual = original_protein(draw_mock, single_letter_protein=False)
 
     expected = "AlaCysAsp"
-    assert seq == expected  # fails because utilities.protein_1to3 does not contain lowercase entries
+    assert actual == expected  # fails because utilities.protein_1to3 does not contain lowercase entries
