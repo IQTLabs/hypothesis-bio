@@ -232,9 +232,13 @@ def fasta(
     comment = draw(comment_source)
     sequence = draw(sequence_source)
 
+    if not wrap_lines and wrap_length is not None:
+        raise ValueError("Can't have wrap length if not wrapping")
+
     # the nice case where the user gave the wrap size
     if wrap_lines and wrap_length is not None:
         sequence = wrap(sequence, width=wrap_length)
+        sequence = "\n".join(sequence)
 
     # the pathological case
     elif wrap_lines and wrap_length is None:
