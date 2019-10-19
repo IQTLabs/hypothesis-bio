@@ -2,7 +2,7 @@
 
 """Main module."""
 
-from textwrap import wrap
+from textwrap import fill
 from typing import Optional, Sequence
 
 from hypothesis import assume
@@ -233,7 +233,7 @@ def fasta(
 
     # the nice case where the user gave the wrap size
     if wrap_length is not None:
-        sequence = wrap(sequence, width=wrap_length)
+        sequence = fill(sequence, wrap_length)
         sequence = "\n".join(sequence)
 
     # the pathological case
