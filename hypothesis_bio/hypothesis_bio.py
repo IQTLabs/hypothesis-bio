@@ -133,6 +133,15 @@ def cds(
     - `max_size`: The longest CDS to generate in base pairs.
     """
 
+    # ensure that what we're trying to do is even possible
+    min_possible_size = 0
+    if include_start_codon:
+        min_possible_size += 3
+    if include_stop_codon:
+        min_possible_size += 3
+    if max_size is not None and max_size < min_possible_size:
+        raise ValueError("Sequence is to short to include start/stop codons.")
+
     # first, create the main DNA sequence
     if include_start_codon:
         min_size -= 3

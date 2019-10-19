@@ -1,5 +1,5 @@
 import pytest
-from hypothesis import given
+from hypothesis import HealthCheck, given, settings
 from hypothesis.errors import InvalidArgument, Unsatisfiable
 
 from hypothesis_bio import cds
@@ -54,7 +54,7 @@ def test_max_size_less_than_min_size():
 def test_min_size_equal_to_max_size():
 
     # you can't fit two codons in 3 bases
-    with pytest.raises(Unsatisfiable):
+    with pytest.raises(ValueError):
         minimal(
             cds(
                 min_size=3,
@@ -64,22 +64,48 @@ def test_min_size_equal_to_max_size():
             )
         )
 
-    # or 2 for that matter
-    with pytest.raises(Unsatisfiable):
+    # but you can fit one
+    assert (
         minimal(
             cds(
-                min_size=2,
-                max_size=2,
+                min_size=3,
+                max_size=3,
                 include_start_codon=True,
+                include_stop_codon=False,
+            )
+        )
+        == "ATA"
+    )
+    assert (
+        minimal(
+            cds(
+                min_size=3,
+                max_size=3,
+                include_start_codon=False,
                 include_stop_codon=True,
             )
         )
+        == "AGA"
+    )
 
     # non mod 3 specific sizes won't work
     with pytest.raises(Unsatisfiable):
-        minimal(cds(min_size=4, max_size=4))
+
+        @given(cds(min_size=7, max_size=7))
+        @settings(suppress_health_check=HealthCheck.all())
+        def inner(x):
+            pass
+
+        inner()
+
     with pytest.raises(Unsatisfiable):
-        minimal(cds(min_size=7, max_size=7))
+
+        @given(cds(min_size=8, max_size=8))
+        @settings(suppress_health_check=HealthCheck.all())
+        def inner(x):
+            pass
+
+        inner()
 
     # if start and stop codons are included, there is no other codon in a 6-mer
     assert minimal(cds(min_size=6, max_size=6)) == "ATAAGA"
