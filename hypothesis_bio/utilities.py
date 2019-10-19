@@ -1,3 +1,10 @@
+from hypothesis.strategies import characters
+
+
+def get_characters_source():
+    return characters(min_codepoint=32, max_code_point=126)
+
+
 ambiguous_bases = {
     "A": ["A", "W", "M", "R", "D", "H", "V", "N"],
     "T": ["T", "W", "K", "Y", "B", "D", "H", "N"],
