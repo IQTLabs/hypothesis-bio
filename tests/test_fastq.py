@@ -1,7 +1,12 @@
 import pytest
 from hypothesis import errors, given
 
-from hypothesis_bio.hypothesis_bio import MAX_ASCII, fastq, fastq_quality
+from hypothesis_bio.hypothesis_bio import (
+    MAX_ASCII,
+    fastq,
+    fastq_quality,
+    illumina_sequence_id,
+)
 
 from .minimal import minimal
 
@@ -155,3 +160,17 @@ def test_fastq_wrapping_greater_than_size_doesnt_wrap(fastq_string: str):
     expected = 4
 
     assert actual == expected
+
+
+def test_illumina_seq_id_minimal():
+    actual = minimal(illumina_sequence_id())
+    expected = "0:0:0:0:0:0:0:A+A 1:N:0:A"
+
+    assert actual == expected
+
+
+@given(illumina_sequence_id())
+def test_illumina_seq_id_ensure_control_num_is_even_or_zero(seq_id):
+    control_num = int(seq_id.split(":")[-2])
+
+    assert control_num % 2 == 0

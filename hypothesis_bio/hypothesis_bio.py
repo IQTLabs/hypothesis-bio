@@ -7,7 +7,14 @@ from typing import Dict, Optional, Sequence
 
 from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
-from hypothesis.strategies import characters, composite, integers, sampled_from, text
+from hypothesis.strategies import (
+    characters,
+    composite,
+    from_regex,
+    integers,
+    sampled_from,
+    text,
+)
 
 from .utilities import (
     ambiguous_start_codons,
@@ -284,6 +291,50 @@ def sequence_id(
             min_size=min_size,
             max_size=max_size,
         )
+    )
+
+
+@composite
+def illumina_sequence_id(draw) -> str:
+    """Generate an Illumina-style sequence identifier.
+
+
+    Notes:
+        Specifications taken from [here](https://support.illumina.com/help/BaseSpace_Sequence_Hub/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm)
+    """
+    delim = ":"
+    instrument = draw(from_regex(r"[a-zA-Z0-9_]+", fullmatch=True))
+    run_number = draw(integers(min_value=0))
+    flowcell_id = draw(from_regex(r"[a-zA-Z0-9]+", fullmatch=True))
+    lane = draw(integers(min_value=0))
+    tile = draw(integers(min_value=0))
+    x_pos = draw(integers(min_value=0))
+    y_pos = draw(integers(min_value=0))
+    umi = draw(from_regex(r"[ACGTN]+\+[ACGTN]+", fullmatch=True))
+    read_num = draw(from_regex(r"[12]", fullmatch=True))
+    is_filtered = draw(from_regex(r"[YN]", fullmatch=True))
+    control_num = draw(integers(min_value=0))
+    assume(control_num % 2 == 0)  # control_num must be 0 or even
+    index = draw(from_regex(r"[ACGTN]+", fullmatch=True))
+
+    return (
+        "{instrument}{delim}{run_number}{delim}{flowcell_id}{delim}{lane}{delim}"
+        "{tile}{delim}{x_pos}{delim}{y_pos}{delim}{umi} {read_num}{delim}"
+        "{is_filtered}{delim}{control_num}{delim}{index}"
+    ).format(
+        instrument=instrument,
+        delim=delim,
+        run_number=run_number,
+        flowcell_id=flowcell_id,
+        lane=lane,
+        tile=tile,
+        x_pos=x_pos,
+        y_pos=y_pos,
+        umi=umi,
+        read_num=read_num,
+        is_filtered=is_filtered,
+        control_num=control_num,
+        index=index,
     )
 
 
