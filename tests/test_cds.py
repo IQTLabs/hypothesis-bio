@@ -1,7 +1,8 @@
 from hypothesis import given
-from minimal import minimal
 
 from hypothesis_bio import cds
+
+from .minimal import minimal
 
 
 @given(cds())
