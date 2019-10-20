@@ -9,6 +9,7 @@ from hypothesis_bio.pdb import (
     generate_split,
     generate_title,
     generate_token,
+    generate_caveat,
 )
 
 from .minimal import minimal
@@ -78,3 +79,15 @@ def test_generate_split():
 
 def test_generate_split_continuation():
     assert minimal(generate_split(continuation_number=5)) == "SPLIT    5 0000"
+
+
+def test_generate_caveat():
+    assert minimal(generate_caveat()) == "CAVEAT     0000    "
+
+
+def test_generate_non_empty_caveat():
+    assert minimal(generate_caveat(), lambda x: len(x) > 19) == "CAVEAT" + " " * 5 + "0000" + "    " + "0"
+
+
+def test_generate_caveat_continuation():
+    assert minimal(generate_caveat(continuation_number=5)) == "CAVEAT   5 0000    "

@@ -168,3 +168,21 @@ def generate_split(draw, continuation_number=None, min_entries=1, max_entries=14
         else:
             ids_string += code
     return "SPLIT   " + cont_string + ids_string
+
+
+@composite
+def generate_caveat(draw, continuation_number=None):
+    """Generates the Caveat record in PDB
+
+    Arguments:
+    - `continuation_number`: The number of caveat record in this PDB entry. Must be either None or >=2.
+    """
+    cont_string = ""
+    if continuation_number is None:
+        cont_string = "   "
+    else:
+        cont_string = str(continuation_number).rjust(2, ' ') + " "
+
+    code = draw(generate_idcode())
+    caveat = draw(generate_lstring(min_size=0, max_size=60))
+    return "CAVEAT  " + cont_string + code + "    " + caveat  
