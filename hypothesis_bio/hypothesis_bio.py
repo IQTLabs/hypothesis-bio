@@ -249,6 +249,8 @@ def fasta(
 
     comment = draw(comment_source)
     sequence = draw(sequence_source)
+    
+    assum(len(sequence) > 0)
 
     # the nice case where the user gave the wrap size
     if wrap_length is not None:

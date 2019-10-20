@@ -5,8 +5,8 @@ build-backend = "flit.buildapi"
 [tool.flit.metadata]
 module = "hypothesis_bio"
 dist-name = "hypothesis-bio"
-author = "Benjamin D. Lee, Luiz Irber, Michael Hall, Vaastav Anand"
-author-email = "benjamindlee@me.com, contact@luizirber.org, michael@mbh.sh, vaastav.anand05@gmail.com"
+author = "Benjamin D. Lee, Luiz Irber, Michael Hall, Vaastav Anand, ZongYi Ha"
+author-email = "benjamindlee@me.com, contact@luizirber.org, michael@mbh.sh, vaastav.anand05@gmail.com, jessica.ha@alumni.ubc.ca"
 home-page = "https://github.com/Lab41/hypothesis-bio"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -37,7 +37,7 @@ docs = [
 ]
 
 [tool.isort]
-known_third_party = ["hypothesis", "pytest"]
+known_third_party = ["Bio", "hypothesis", "pytest", "skbio"]
 multi_line_output = 3
 include_trailing_comma = true
 line_length = 88
