@@ -409,12 +409,18 @@ def nanopore_sequence_identifier(draw) -> str:
 
 @composite
 def fastq_quality(
-    draw, size=0, min_score: int = 0, max_score: int = 93, offset: int = 33
+    draw,
+    min_length: int = 1,
+    max_length: int = None,
+    min_score: int = 0,
+    max_score: int = 93,
+    offset: int = 33,
 ) -> str:
     """Generates the quality string for the FASTQ format
 
     Arguments:
-    - `size`: Size of the quality string to be generated
+    - `min_length`: Minimum length of the quality string.
+    - `max_length`: Maximum length of the quality string.
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset.
@@ -442,16 +448,17 @@ def fastq_quality(
             alphabet=characters(
                 min_codepoint=min_codepoint, max_codepoint=max_codepoint
             ),
-            min_size=size,
-            max_size=size,
+            min_size=min_length,
+            max_size=max_length,
         )
     )
 
 
 @composite
-def fastq(
+def fastq_entry(
     draw,
-    size=0,
+    min_length: int = 1,
+    max_length: int = None,
     min_score: int = 0,
     max_score: int = 93,
     offset: int = 33,
@@ -460,10 +467,11 @@ def fastq(
     additional_description: bool = True,
     wrap_length: int = 80,
 ) -> str:
-    """Generate strings representing sequences in FASTQ format.
+    """Generate an entry in FASTQ format.
 
     Arguments:
-    - `size`: Size of the sequence and quality string.
+    - `min_length`: Minimum length of the sequence and quality string.
+    - `max_length`: Maximum length of the sequence and quality string.
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset for quality string.
@@ -486,17 +494,22 @@ def fastq(
     if identifier_source is None:
         identifier_source = sequence_identifier()
     if sequence_source is None:
-        sequence_source = dna(min_size=size, max_size=size)
+        sequence_source = dna(min_size=min_length, max_size=max_length)
 
     seq_id = draw(identifier_source)
     sequence = draw(sequence_source)
-    assume(len(sequence) == size)
 
     quality = draw(
         fastq_quality(
-            size=size, min_score=min_score, max_score=max_score, offset=offset
+            min_length=len(sequence),
+            max_length=len(sequence),
+            min_score=min_score,
+            max_score=max_score,
+            offset=offset,
         )
     )
+    assume(len(quality) == len(sequence))
+
     description = seq_id if additional_description else ""
 
     if wrap_length > 0:
