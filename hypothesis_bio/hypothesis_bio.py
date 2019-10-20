@@ -303,7 +303,7 @@ def fasta(
     return_str = ""
     for i in range(len(sequences)):
         if i != 0:
-            return_str = return_str + "\n"
+            return_str += "\n"
         return_str = return_str + ">" + comments[i] + "\n" + sequences[i]
     return return_str
 
