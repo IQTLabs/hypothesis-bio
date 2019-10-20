@@ -252,7 +252,7 @@ def fasta(
 
     # randomly determine how many FASTA sequences to generate
     num_fasta = draw(integers(min_value=min_reads, max_value=max_reads))
-    
+
     # Lists to hold comments and sequences for each FASTA sequence
     comments = []
     sequences = []
@@ -295,13 +295,8 @@ def fasta(
                 # sanity checks
                 for i in range(len(sequences)):
                     sequence = sequences[i]
-                    assume("\n\r" not in sequence
-                        and "\n\n" not in sequence
-                        and "\r\r" not in sequence
-                    )
-                    assume(
-                        not sequence.startswith("\r") and not sequence.startswith("\n")
-                    )
+                    assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
+                    assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
 
     # prepare return string
     return_str = ""
