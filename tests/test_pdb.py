@@ -1,6 +1,6 @@
 from .minimal import minimal
 
-from hypothesis_bio.pdb import generate_date, generate_idcode, generate_token, generate_lstring, generate_real, generate_header, generate_specification, generate_obslte, generate_title
+from hypothesis_bio.pdb import generate_date, generate_idcode, generate_token, generate_lstring, generate_real, generate_header, generate_specification, generate_obslte, generate_title, generate_split
 
 
 def test_generate_date():
@@ -53,3 +53,11 @@ def test_generate_title_continuation():
 
 def test_generate_non_empty_title_continuation():
     assert minimal(generate_title(continuation_number=5), lambda x: len(x) > 11) == "TITLE    5 0" 
+
+
+def test_generate_split():
+    assert minimal(generate_split()) == "SPLIT      0000"
+
+
+def test_generate_split_continuation():
+    assert minimal(generate_split(continuation_number=5)) == "SPLIT    5 0000"

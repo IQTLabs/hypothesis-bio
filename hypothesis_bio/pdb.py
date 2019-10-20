@@ -103,7 +103,7 @@ def generate_obslte(draw, continuation_number=None, min_entries=1, max_entries=9
     num_entries = draw(integers(min_value=min_entries, max_value=max_entries))
     for i in range(num_entries):
         code = draw(generate_idcode())
-        if i < num_entries-2:
+        if i < num_entries-1:
             generated_record += code + " "
         else:
             generated_record += code
@@ -115,7 +115,7 @@ def generate_title(draw, continuation_number=None):
     """Generates the Title record in PDB
 
     Arguments:
-    - `continuation_number`: The number of Title recrod in this PDB entry. Must either be None or >=2.
+    - `continuation_number`: The number of Title record in this PDB entry. Must either be None or >=2.
     """ 
     cont_string = ""
     if continuation_number is None:
@@ -127,3 +127,27 @@ def generate_title(draw, continuation_number=None):
     return "TITLE   " + cont_string + title
 
 
+@composite
+def generate_split(draw, continuation_number=None, min_entries=1, max_entries=14):
+    """Generates the Split record in PDB
+
+    Arguments:
+    - `continuation_number`: The number of split record in this PDB entry. Must either be None or >=2
+    - `min_entries`: The minimum number of entries to be generated.
+    - `max_entries`: The maximum number of entries to be generated.
+    """
+    cont_string = ""
+    if continuation_number is None:
+        cont_string = "   "
+    else:
+        cont_string = str(continuation_number).rjust(2, ' ') + " "
+
+    num_entries = draw(integers(min_value=min_entries, max_value=max_entries))
+    ids_string = ""
+    for i in range(num_entries):
+        code = draw(generate_idcode())
+        if i < num_entries-1:
+            ids_string += code + " "
+        else:
+            ids_string += code
+    return "SPLIT   " + cont_string + ids_string 
