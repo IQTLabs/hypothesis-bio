@@ -9,6 +9,7 @@ module.exports = {
     smoothScroll: true,
     nav: [
       { text: "Home", link: "/" },
+      { text: "Guide", link: "/guide" },
       { text: "Contribute", link: "/contributing" },
       { text: "API Reference", link: "/api" }
     ]

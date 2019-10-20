@@ -1,10 +1,9 @@
-from hypothesis_bio.strategy_blast6 import BLAST6_DEFAULT_COL_HEADERS, blast6
-
-from .minimal import minimal
+from hypothesis_bio.blast6 import BLAST6_DEFAULT_HEADERS, BLAST6_HEADERS
 
 
-def test_smallest_example():
-    args_dict = {}
-    for key in BLAST6_DEFAULT_COL_HEADERS.keys():
-        args_dict[key] = []
-    print(minimal(blast6(args_dict)))
+def test_all_headers_is_dict():
+    assert type(BLAST6_HEADERS) == dict
+
+
+def test_default_headers_is_list():
+    assert type(BLAST6_DEFAULT_HEADERS) == list
