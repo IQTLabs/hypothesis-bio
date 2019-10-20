@@ -208,7 +208,7 @@ or, for BibTeX:
 
 ```bibtex
 @misc{hypothesis_bio,
-  author    = {Benjamin Lee and Reva Shenwai and Zongyi Ha},
+  author    = {Benjamin Lee and Reva Shenwai and Zongyi Ha and Michael B. Hall and Vaastav Anand},
   title     = {{Hypothesis-Bio}},
   publisher = {GitHub},
   url       = {https://github.com/Lab41/hypothesis-bio}
