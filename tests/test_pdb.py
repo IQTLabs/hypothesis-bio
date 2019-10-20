@@ -48,4 +48,8 @@ def test_generate_non_empty_title():
 
 
 def test_generate_title_continuation():
-    assert minimal(generate_title(continuation_number=5)) == "TITLE  " + " 5 "
+    assert minimal(generate_title(continuation_number=5)) == "TITLE    5 "
+
+
+def test_generate_non_empty_title_continuation():
+    assert minimal(generate_title(continuation_number=5), lambda x: len(x) > 11) == "TITLE    5 0" 

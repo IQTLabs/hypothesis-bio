@@ -121,7 +121,9 @@ def generate_title(draw, continuation_number=None):
     if continuation_number is None:
         cont_string = "  "
     else:
-        cont_string = str(continuation_number).rjust(2, ' ')
+        cont_string = str(continuation_number).rjust(2, ' ') + " "
 
     title = draw(generate_lstring(min_size=0, max_size=70))
-    return "TITLE  " + cont_string + " " + title
+    return "TITLE   " + cont_string + title
+
+
