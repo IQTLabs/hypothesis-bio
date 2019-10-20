@@ -9,6 +9,7 @@ from hypothesis_bio import (
     illumina_sequence_identifier,
     nanopore_sequence_identifier,
     protein,
+    sequence_identifier,
 )
 
 from .minimal import minimal
@@ -16,6 +17,13 @@ from .minimal import minimal
 
 def test_fastq_quality_smallest_example():
     actual = minimal(fastq_quality())
+    expected = ""
+
+    assert actual == expected
+
+
+def test_fastq_quality_smallest_non_empty_example():
+    actual = minimal(fastq_quality(min_size=1))
     expected = "0"
 
     assert actual == expected
@@ -51,6 +59,15 @@ def test_fastq_quality_offset_causes_outside_ascii_range_raises_error():
 
 def test_fastq_entry_smallest_example():
     actual = minimal(fastq_entry())
+    expected = "@\n\n+\n"
+
+    assert actual == expected
+
+
+def test_fastq_entry_smallest_non_empty_example():
+    actual = minimal(
+        fastq_entry(min_size=1, identifier_source=sequence_identifier(min_size=1))
+    )
     expected = "@0\nA\n+0\n0"
 
     assert actual == expected
@@ -150,7 +167,7 @@ def test_fastq_entry_wrapping_greater_than_size_doesnt_wrap(fastq_string: str):
 
 def test_fastq_entry_minimal_protein_source():
     actual = minimal(fastq_entry(min_size=1, sequence_source=protein(min_size=1)))
-    expected = "@0\nA\n+0\n0"
+    expected = "@\nA\n+\n0"
 
     assert actual == expected
 
@@ -185,7 +202,7 @@ def test_nanopore_seq_id_minimal():
 
 def test_fastq_minial():
     actual = minimal(fastq())
-    expected = "@0\nA\n+0\n0"
+    expected = "@\n\n+\n"
 
     assert actual == expected
 
