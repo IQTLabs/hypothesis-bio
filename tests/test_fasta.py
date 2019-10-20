@@ -2,6 +2,7 @@ from hypothesis import given
 
 from hypothesis_bio import dna, fasta, fasta_entry
 
+from .minimal import minimal
 
 @given(fasta_entry())
 def test_return_type(seq):
