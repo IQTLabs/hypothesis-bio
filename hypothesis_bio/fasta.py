@@ -1,11 +1,10 @@
 from textwrap import fill
-from typing import Optional, Sequence
+from typing import Optional
 
 from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
 from hypothesis.strategies import characters, composite, integers, sampled_from, text
 
-from . import MAX_ASCII
 from .sequences import dna
 
 
@@ -61,30 +60,3 @@ def fasta(
     assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
 
     return ">" + comment + "\n" + sequence
-
-
-@composite
-def sequence_identifier(
-    draw,
-    blacklist_characters: Sequence[str] = "",
-    min_size: int = 1,
-    max_size: int = 100,
-) -> str:
-    """Generates a sequence identifier.
-
-    Arguments:
-    - `blacklist_characters`: Characters to not include in the sequence ID.
-    - `min_size`: Minimum length of the sequence ID.
-    - `max_size`: Maximum length of the sequence ID.
-    """
-    return draw(
-        text(
-            alphabet=characters(
-                blacklist_characters=blacklist_characters,
-                min_codepoint=33,
-                max_codepoint=MAX_ASCII,
-            ),
-            min_size=min_size,
-            max_size=max_size,
-        )
-    )

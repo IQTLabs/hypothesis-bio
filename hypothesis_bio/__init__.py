@@ -12,3 +12,4 @@ from .blast6 import *
 from .fasta import *
 from .fastq import *
 from .sequences import *
+from .sequence_identifiers import *
