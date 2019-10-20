@@ -245,10 +245,10 @@ def fasta(
     if comment_source is None:
         comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))
     if sequence_source is None:
-        sequence_source = dna()
+        sequence_source = dna(min_size=1)
 
     comment = draw(comment_source)
-    sequence = draw(sequence_source)
+    sequence = draw(sequence_source)  #### TODO: has to be at least 1 char
 
     # the nice case where the user gave the wrap size
     if wrap_length is not None:
