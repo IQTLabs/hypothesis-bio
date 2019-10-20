@@ -37,7 +37,7 @@ def test_sources(seq):
 
 def test_fasta_minial():
     actual = minimal(fasta())
-    expected = "@0\nA\n+0\n0"
+    expected = ">0\nA\n+0\n0"
 
     assert actual == expected
 
