@@ -112,4 +112,16 @@ def generate_obslte(draw, continuation_number=None, min_entries=1, max_entries=9
 
 @composite
 def generate_title(draw, continuation_number=None):
-    """Generates the Title record in  
+    """Generates the Title record in PDB
+
+    Arguments:
+    - `continuation_number`: The number of Title recrod in this PDB entry. Must either be None or >=2.
+    """ 
+    cont_string = ""
+    if continuation_number is None:
+        cont_string = "  "
+    else:
+        cont_string = str(continuation_number).rjust(2, ' ')
+
+    title = draw(generate_lstring(min_size=0, max_size=70))
+    return "TITLE  " + cont_string + " " + title
