@@ -297,12 +297,12 @@ assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in seque
 assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
 
     # prepare return string
-    return_str = ""
-    for i in range(len(sequences)):
-        if i!=0:
-            return_str = return_str + "\n"
-        return_str = return_str + ">" + comment + "\n" + sequence
-    return return_str
+return_str = ""
+for i in range(len(sequences)):
+    if i!=0:
+        return_str = return_str + "\n"
+    return_str = return_str + ">" + comment + "\n" + sequence
+return return_str
 
 
 @composite
