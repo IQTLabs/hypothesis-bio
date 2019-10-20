@@ -240,7 +240,7 @@ def fasta(
 
     # the nice case where the user gave the wrap size
     if wrap_length is not None:
-        sequence = fill(sequence, wrap_length)
+        sequence = fill(sequence, wrap_length, break_on_hyphens=False)
 
     # the pathological case
     elif wrap_length is None:

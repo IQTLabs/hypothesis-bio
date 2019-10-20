@@ -10,7 +10,9 @@ def test_return_type(seq):
 
 @given(fasta(wrap_length=5))
 def test_wrap_length(seq):
-    assert max([len(x.rstrip()) for x in seq.split("\n") if not x.startswith(">")]) <= 5
+    assert all(
+        [len(x.rstrip()) == 5 for x in seq.split("\n")[:-1] if not x.startswith(">")]
+    )
 
 
 @given(fasta(allow_windows_line_endings=False))
