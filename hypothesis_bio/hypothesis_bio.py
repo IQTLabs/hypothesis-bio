@@ -411,7 +411,7 @@ def nanopore_sequence_identifier(draw) -> str:
 def fastq_quality(
     draw,
     min_length: int = 1,
-    max_length: int = None,
+    max_length: Optional[int] = None,
     min_score: int = 0,
     max_score: int = 93,
     offset: int = 33,
@@ -458,12 +458,12 @@ def fastq_quality(
 def fastq_entry(
     draw,
     min_length: int = 1,
-    max_length: int = None,
+    max_length: Optional[int] = None,
     min_score: int = 0,
     max_score: int = 93,
     offset: int = 33,
-    sequence_source: SearchStrategy = None,
-    identifier_source: SearchStrategy = None,
+    sequence_source: Optional[SearchStrategy] = None,
+    identifier_source: Optional[SearchStrategy] = None,
     additional_description: bool = True,
     wrap_length: int = 80,
 ) -> str:
@@ -523,7 +523,10 @@ def fastq_entry(
 
 @composite
 def fastq(
-    draw, entry_source: SearchStrategy = None, min_reads: int = 1, max_reads: int = 100
+    draw,
+    entry_source: Optional[SearchStrategy] = None,
+    min_reads: int = 1,
+    max_reads: int = 100,
 ) -> str:
     """Generates a string representation of a fastq file.
 
