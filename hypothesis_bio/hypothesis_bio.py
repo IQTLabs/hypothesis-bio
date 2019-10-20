@@ -292,9 +292,9 @@ def fasta(
                 sequence = sequences[i]
                 sequences[i] = sequence[:index] + line_ending + sequence[index:]
 
-    # sanity checks
-    assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
-    assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
+                # sanity checks
+                assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
+                assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
 
     # prepare return string
     return_str = ""
