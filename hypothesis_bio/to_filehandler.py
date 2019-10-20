@@ -1,6 +1,6 @@
 from io import StringIO
 
-import skbio
+from skbio import read
 from Bio import SeqIO
 
 
