@@ -233,7 +233,8 @@ def fasta(
     sequence_source: SearchStrategy = None,
     wrap_length: Optional[int] = None,
     allow_windows_line_endings=True,
-    num_fasta: Optional[int] = None
+    min_reads: int = 1,
+    max_reads: int = 100
 ) -> str:
     """Generates FASTA sequences.
 
@@ -249,10 +250,9 @@ def fasta(
     if sequence_source is None:
         sequence_source = dna()
 
-    if num_fasta is None:
-        # randomly determine how many FASTA sequences to generate
-        num_fasta = draw(integers(min_value=0)) ##replace with numpy if needed
-
+    # randomly determine how many FASTA sequences to generate
+    num_fasta = draw(integers(min_value=min_reads, max_value=max_reads))
+    
     # Lists to hold comments and sequences for each FASTA sequence
     comments = []
     sequences = []
@@ -295,13 +295,18 @@ def fasta(
                 # sanity checks
                 for i in range(len(sequences)):
                     sequence = sequences[i]
-                    assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
-                    assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
+                    assume("\n\r" not in sequence
+                        and "\n\n" not in sequence
+                        and "\r\r" not in sequence
+                    )
+                    assume(
+                        not sequence.startswith("\r") and not sequence.startswith("\n")
+                    )
 
     # prepare return string
     return_str = ""
     for i in range(len(sequences)):
-        if i!=0:
+        if i != 0:
             return_str = return_str + "\n"
         return_str = return_str + ">" + comments[i] + "\n" + sequences[i]
     return return_str
