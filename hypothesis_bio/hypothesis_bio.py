@@ -243,7 +243,8 @@ def fasta(
     - `sequence_source`: The source of the sequence. Defaults to [`dna`](#dna).
     - `wrap_length`: The width to wrap the sequence on. If `None`, mixed sizes are used.
     - `allow_windows_line_endings`: Whether to allow `\\r\\n` in the linebreaks.
-    = `multiple_fasta`: Whether multiple FASTA sequences will be generated.
+    - `min_reads`: Minimum number of FASTA sequences to generate.
+    - `max_reads` : Maximum number of FASTA sequences to generate.
     """
     if comment_source is None:
         comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))
