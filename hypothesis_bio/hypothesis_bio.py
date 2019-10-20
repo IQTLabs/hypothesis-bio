@@ -283,7 +283,7 @@ def fasta_entry(
 def fasta(
     draw,
     entry_source: Optional[SearchStrategy] = None,
-    min_reads: int = 1
+    min_reads: int = 1,
     max_reads: int = 100,
 ) -> str:
     """Generates a string representation of a fasta file.
