@@ -34,9 +34,8 @@ def fasta_entry(
 
     # the nice case where the user gave the wrap size
     if wrap_length is not None:
-        if wrap_length > 0:
-            pass
-        else:
+        # default to 80 if wrap length is set as 0
+        if wrap_length <= 0:
             wrap_length = 80
         sequence = fill(sequence, wrap_length, break_on_hyphens=False)
 
