@@ -231,7 +231,7 @@ def fasta_entry(
     draw,
     comment_source: SearchStrategy = None,
     sequence_source: SearchStrategy = None,
-    wrap_length: Optional[int] = None,
+    wrap_length: int = 80,
     allow_windows_line_endings=True,
 ) -> str:
     """Generates FASTA sequences.
@@ -251,11 +251,8 @@ def fasta_entry(
     sequence = draw(sequence_source)
 
     # the nice case where the user gave the wrap size
-    if wrap_length is not None:
+    if wrap_length > 0:
         sequence = fill(sequence, wrap_length, break_on_hyphens=False)
-
-    # the pathological case
-    elif wrap_length is None:
 
         # choose where to wrap
         indices = [
@@ -300,7 +297,6 @@ def fasta(
     num_reads = draw(integers(min_value=min_reads, max_value=max_reads))
 
     return "\n".join([draw(entry_source) for i in range(num_reads)])
-
 
 @composite
 def kmers(draw, seq: str, k: int) -> str:
