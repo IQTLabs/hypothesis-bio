@@ -1,6 +1,6 @@
 loaders:
   - type: python
-    modules: [hypothesis_bio]
+    modules: [fasta, fastq, blast6, sequences, sequence_identifiers]
     search_path: [../hypothesis_bio]
 processors:
   - type: pydocmd

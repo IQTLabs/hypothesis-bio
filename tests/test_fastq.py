@@ -1,7 +1,7 @@
 import pytest
 from hypothesis import errors, given
 
-from hypothesis_bio.hypothesis_bio import (
+from hypothesis_bio import (
     MAX_ASCII,
     fastq,
     fastq_entry,
