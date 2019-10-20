@@ -289,8 +289,8 @@ def fasta(
                     if allow_windows_line_endings
                     else "\n"
                     )
-                    sequence = sequences[i]
-                    sequences[i] = sequence[:index] + line_ending + sequence[index:]
+                sequence = sequences[i]
+                sequences[i] = sequence[:index] + line_ending + sequence[index:]
 
     # sanity checks
     assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
