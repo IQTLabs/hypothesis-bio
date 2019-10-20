@@ -5,5 +5,10 @@
 __author__ = "Benjamin D. Lee"
 __email__ = "benjamindlee@me.com"
 
+MAX_ASCII = 126
+
 from .__version__ import __version__
-from .hypothesis_bio import *
+from .blast6 import *
+from .fasta import *
+from .fastq import *
+from .sequences import *
