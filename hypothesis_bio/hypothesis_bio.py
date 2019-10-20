@@ -257,7 +257,7 @@ def fasta_entry(
         else:
             wrap_length = 80
         sequence = fill(sequence, wrap_length, break_on_hyphens=False)
-    
+
     # the pathological case
     elif wrap_length is None:
 
@@ -276,7 +276,7 @@ def fasta_entry(
                 else "\n"
             )
             sequence = sequence[:index] + line_ending + sequence[index:]
-
+    
     # sanity checks
     assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
     assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
