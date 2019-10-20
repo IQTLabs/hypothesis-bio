@@ -2,7 +2,7 @@
 
 """Main module."""
 
-from hypothesis.strategies import characters, composite, floats, text
+from hypothesis.strategies import composite, floats, integers, text
 
 from .utilities import get_characters_source
 
