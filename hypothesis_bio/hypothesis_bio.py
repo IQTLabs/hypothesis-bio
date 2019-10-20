@@ -227,7 +227,7 @@ def cds(
 
 
 @composite
-def fasta(
+def fasta_entry(
     draw,
     comment_source: SearchStrategy = None,
     sequence_source: SearchStrategy = None,
@@ -278,6 +278,28 @@ def fasta(
     assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
 
     return ">" + comment + "\n" + sequence
+
+@composite
+def fasta(
+    draw,
+    entry_source: Optional[SearchStrategy] = None,
+    min_reads: int = 1
+    max_reads: int = 100,
+) -> str:
+    """Generates a string representation of a fasta file.
+
+    Arguments:
+    - `entry_source`: The search strategy to use for generating fasta entries. The
+    default (`None`) will use [`fasta_entry`](#fasta_entry) with default settings.
+    - `min_reads`: Minimum number of fasta entries to generate.
+    - `max_reads`: Maximum number of fasta entries to generate.
+    """
+    if entry_source is None:
+        entry_source = fasta_entry()
+
+    num_reads = draw(integers(min_value=min_reads, max_value=max_reads))
+
+    return "\n".join([draw(entry_source) for i in range(num_reads)])
 
 
 @composite
