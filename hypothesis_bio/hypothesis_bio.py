@@ -233,7 +233,7 @@ def fasta(
     sequence_source: SearchStrategy = None,
     wrap_length: Optional[int] = None,
     allow_windows_line_endings=True,
-    num_fasta = Optional[int] = None
+    num_fasta: Optional[int] = None
 ) -> str:
     """Generates FASTA sequences.
 
