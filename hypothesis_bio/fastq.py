@@ -1,4 +1,5 @@
 from textwrap import fill
+from typing import Optional
 
 from hypothesis import assume
 from hypothesis.searchstrategy import SearchStrategy
@@ -19,7 +20,6 @@ from .sequences import dna
 @composite
 def illumina_sequence_identifier(draw) -> str:
     """Generate an Illumina-style sequence identifier.
-
     ::: tip Note
     Specifications taken from Specifications taken from [here](https://support.illumina.com/help/BaseSpace_Sequence_Hub/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm)
     :::
@@ -63,7 +63,6 @@ def illumina_sequence_identifier(draw) -> str:
 @composite
 def nanopore_sequence_identifier(draw) -> str:
     """Generate a Nanopore-style sequence identifier.
-
     ::: tip Note
         No formal specifications could be found, so am going off a header produced from
         `Guppy` v2.1.3: @db127b21-9336-4052-8a8e-5b5d6ac0e3be runid=700c35056d5bf4191f3f9ade0cb342d8406f8ea4 sampleid=madagascar_tb_mdr_3 read=20199 ch=214 start_time=2018-02-26T21:39:56Z
@@ -97,16 +96,20 @@ def nanopore_sequence_identifier(draw) -> str:
 
 @composite
 def fastq_quality(
-    draw, size=0, min_score: int = 0, max_score: int = 93, offset: int = 33
+    draw,
+    min_size: int = 1,
+    max_size: Optional[int] = None,
+    min_score: int = 0,
+    max_score: int = 93,
+    offset: int = 33,
 ) -> str:
     """Generates the quality string for the FASTQ format
-
     Arguments:
-    - `size`: Size of the quality string to be generated
+    - `min_size`: Minimum length of the quality string.
+    - `max_size`: Maximum length of the quality string.
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset.
-
     ::: tip Note
         The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
         then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
@@ -130,28 +133,29 @@ def fastq_quality(
             alphabet=characters(
                 min_codepoint=min_codepoint, max_codepoint=max_codepoint
             ),
-            min_size=size,
-            max_size=size,
+            min_size=min_size,
+            max_size=max_size,
         )
     )
 
 
 @composite
-def fastq(
+def fastq_entry(
     draw,
-    size=0,
+    min_size: int = 1,
+    max_size: Optional[int] = None,
     min_score: int = 0,
     max_score: int = 93,
     offset: int = 33,
-    sequence_source: SearchStrategy = None,
-    identifier_source: SearchStrategy = None,
+    sequence_source: Optional[SearchStrategy] = None,
+    identifier_source: Optional[SearchStrategy] = None,
     additional_description: bool = True,
     wrap_length: int = 80,
 ) -> str:
-    """Generate strings representing sequences in FASTQ format.
-
+    """Generate an entry in FASTQ format.
     Arguments:
-    - `size`: Size of the sequence and quality string.
+    - `min_size`: Minimum length of the sequence and quality string.
+    - `max_size`: Maximum length of the sequence and quality string.
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset for quality string.
@@ -162,7 +166,6 @@ def fastq(
     - `additional_description`: Add sequence ID and comment after `+` on third line.
     - `wrap_length`: Number of characters to wrap the sequence and quality strings on. Set
     to 0 to disable wrapping.
-
     ::: tip Note
         The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
         then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
@@ -174,17 +177,22 @@ def fastq(
     if identifier_source is None:
         identifier_source = sequence_identifier()
     if sequence_source is None:
-        sequence_source = dna(min_size=size, max_size=size)
+        sequence_source = dna(min_size=min_size, max_size=max_size)
 
     seq_id = draw(identifier_source)
     sequence = draw(sequence_source)
-    assume(len(sequence) == size)
 
     quality = draw(
         fastq_quality(
-            size=size, min_score=min_score, max_score=max_score, offset=offset
+            min_size=len(sequence),
+            max_size=len(sequence),
+            min_score=min_score,
+            max_score=max_score,
+            offset=offset,
         )
     )
+    assume(len(quality) == len(sequence))
+
     description = seq_id if additional_description else ""
 
     if wrap_length > 0:
@@ -194,3 +202,25 @@ def fastq(
     return "@{seq_id}\n{sequence}\n+{description}\n{quality}".format(
         seq_id=seq_id, sequence=sequence, quality=quality, description=description
     )
+
+
+@composite
+def fastq(
+    draw,
+    entry_source: Optional[SearchStrategy] = None,
+    min_reads: int = 1,
+    max_reads: int = 100,
+) -> str:
+    """Generates a string representation of a fastq file.
+    Arguments:
+    - `entry_source`: The search strategy to use for generating fastq entries. The
+    default (`None`) will use [`fastq_entry`](#fastq_entry) with default settings.
+    - `min_reads`: Minimum number of fastq entries to generate.
+    - `max_reads`: Maximum number of fastq entries to generate.
+    """
+    if entry_source is None:
+        entry_source = fastq_entry()
+
+    num_reads = draw(integers(min_value=min_reads, max_value=max_reads))
+
+    return "\n".join([draw(entry_source) for i in range(num_reads)])
