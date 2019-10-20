@@ -42,11 +42,11 @@ def test_fasta_minial():
     assert actual == expected
 
 
-@given(fasta(entry_source=fasta_entry(wrap_length=0), min_reads=3, max_reads=3))
+@given(fasta(entry_source=fasta_entry(wrap_length=5), min_reads=3, max_reads=3))
 def test_fasta_min_and_max_reads_the_same_no_wrapping(fasta_file):
     lines = fasta_file.split("\n")
 
     actual = len(lines)
-    expected = 12
+    expected = 6
 
     assert actual == expected
