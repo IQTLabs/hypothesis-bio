@@ -3,7 +3,18 @@
 [![Build status](https://github.com/Lab41/hypothesis-bio/workflows/CI/badge.svg)](https://github.com/Lab41/hypothesis-bio/actions)
 [![codecov](https://codecov.io/gh/Lab41/hypothesis-bio/branch/master/graph/badge.svg)](https://codecov.io/gh/Lab41/hypothesis-bio/)
 
-Hypothesis-Bio is a [Hypothesis](https://github.com/HypothesisWorks/hypothesis) extension for property-based testing of biology software.
+Hypothesis-Bio is a [Hypothesis](https://github.com/HypothesisWorks/hypothesis) extension for property-based testing of bioinformatic softwares.
+
+Automates the testing process to validate the correctness of bioinformatics tools by generating a wide range of test cases beyond human testers. Finds and returns the minimal error test case that causes an exception.
+
+### Features
+
+This module provides a Hypothesis strategy for generating biological data formats. This can be used to efficiently and thoroughly test your code.
+
+*Currently supports dna, rna, protein, cds, kmers, fasta, & fastq formats.*
+
+[API Reference](https://lab41.github.io/hypothesis-bio/api.html)
+
 
 ## Quick Start
 
@@ -19,7 +30,7 @@ def gc_content(seq):
 
 (Can you spot the bug in the code?)
 
-Now let's test it out using Hypothesis-Bio.
+Now let's use **Hypothesis-Bio** to find the bug.
 To do so, we specify a _property_ about our code that we expect to hold true over all examples.
 In this case, GC-content is a percentage, so we know it should always be between 0 and 1.
 We can encode that requirement into a test:
@@ -49,7 +60,7 @@ Instead of hard coding inputs and output examples, we can let Hypothesis-Bio do 
 
 ### Another Example
 
-We saw that Hypothesis-Bio can catch simple bugs like a division by zero error, but it can do so much more than that.
+We saw that **Hypothesis-Bio** can catch simple bugs like a division by zero error, but it can do so much more than that.
 Let's consider another function that translates from DNA to protein:
 
 ```python
@@ -171,7 +182,7 @@ Thankfully, Hypothesis-Bio will generate all of these weird edge cases so you do
 
 ## Installation
 
-Hypothesis-Bio will be available from PyPI via:
+**Hypothesis-Bio** will be available from PyPI via:
 
 ```
 pip install hypothesis-bio
@@ -189,7 +200,7 @@ The documentation for Hypothesis-Bio is available [here](https://lab41.github.io
 
 ## Citation
 
-If you use Hypothesis-Bio, please cite it as:
+If you use **Hypothesis-Bio**, please cite it as:
 
 > Hypothesis-Bio. https://github.com/Lab41/hypothesis-bio
 
@@ -197,7 +208,7 @@ or, for BibTeX:
 
 ```bibtex
 @misc{hypothesis_bio,
-  author    = {Benjamin Lee and Reva Shenwai and Zongyi Ha and Michael B. Hall},
+  author    = {Benjamin Lee and Reva Shenwai and Zongyi Ha},
   title     = {{Hypothesis-Bio}},
   publisher = {GitHub},
   url       = {https://github.com/Lab41/hypothesis-bio}
