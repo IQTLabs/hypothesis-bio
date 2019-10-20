@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 from hypothesis import assume
 from hypothesis.strategies import (
@@ -17,8 +17,8 @@ from . import MAX_ASCII
 def sequence_identifier(
     draw,
     blacklist_characters: Sequence[str] = "",
-    min_size: int = 1,
-    max_size: int = 100,
+    min_size: int = 0,
+    max_size: Optional[int] = None,
 ) -> str:
     """Generates a sequence identifier.
 

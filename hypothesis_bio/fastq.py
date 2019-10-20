@@ -13,7 +13,7 @@ from .sequences import dna
 @composite
 def fastq_quality(
     draw,
-    min_size: int = 1,
+    min_size: int = 0,
     max_size: Optional[int] = None,
     min_score: int = 0,
     max_score: int = 93,
@@ -58,7 +58,7 @@ def fastq_quality(
 @composite
 def fastq_entry(
     draw,
-    min_size: int = 1,
+    min_size: int = 0,
     max_size: Optional[int] = None,
     min_score: int = 0,
     max_score: int = 93,
