@@ -233,6 +233,7 @@ def fasta(
     sequence_source: SearchStrategy = None,
     wrap_length: Optional[int] = None,
     allow_windows_line_endings=True,
+    num_fasta = Optional[int] = None
 ) -> str:
     """Generates FASTA sequences.
 
@@ -241,43 +242,67 @@ def fasta(
     - `sequence_source`: The source of the sequence. Defaults to [`dna`](#dna).
     - `wrap_length`: The width to wrap the sequence on. If `None`, mixed sizes are used.
     - `allow_windows_line_endings`: Whether to allow `\\r\\n` in the linebreaks.
+    = `multiple_fasta`: Whether multiple FASTA sequences will be generated.
     """
     if comment_source is None:
         comment_source = text(alphabet=characters(min_codepoint=32, max_codepoint=126))
     if sequence_source is None:
         sequence_source = dna()
 
-    comment = draw(comment_source)
-    sequence = draw(sequence_source)
+    if num_fasta is None:
+        # randomly determine how many FASTA sequences to generate
+        num_fasta = draw(integers(min_value=0)) ##replace with numpy if needed
+
+    # Lists to hold comments and sequences for each FASTA sequence
+    comments = []
+    sequences = []
+    # generate pre-determined number of sequences
+    for i in range(num_fasta):
+        comments.append(draw(comment_source))
+        sequences.append(draw(sequence_source))
 
     # the nice case where the user gave the wrap size
     if wrap_length is not None:
-        sequence = fill(sequence, wrap_length, break_on_hyphens=False)
+        for sequence in sequences:
+            sequence = fill(sequence, wrap_length, break_on_hyphens=False)
 
     # the pathological case
     elif wrap_length is None:
 
-        # choose where to wrap
-        indices = [
-            draw(integers(min_value=0, max_value=len(sequence)))
-            for i in range(draw(integers(min_value=0, max_value=len(sequence))))
-        ]
-        indices = list(set(indices))
+        # list stores lists of indices for each sequences
+        allseq_indices = []
+
+        for sequence in sequences:
+            # choose where to wrap
+            indices = [
+                draw(integers(min_value=0, max_value=len(sequence)))
+                for i in range(draw(integers(min_value=0, max_value=len(sequence))))
+                ]
+            indices = list(set(indices))
+            allseq_indices.append(indices)
 
         # randomly put in the line endings
-        for index in indices:
-            line_ending = (
-                draw(sampled_from(["\r\n", "\n"]))
-                if allow_windows_line_endings
-                else "\n"
-            )
-            sequence = sequence[:index] + line_ending + sequence[index:]
+        for i in range(len(sequences)):
+            for index in allseq_indices[i]:
+                line_ending = (
+                    draw(sampled_from(["\r\n", "\n"]))
+                    if allow_windows_line_endings
+                    else "\n"
+                    )
+                    sequence = sequences[i]
+                    sequences[i] = sequence[:index] + line_ending + sequence[index:]
 
     # sanity checks
     assume("\n\r" not in sequence and "\n\n" not in sequence and "\r\r" not in sequence)
     assume(not sequence.startswith("\r") and not sequence.startswith("\n"))
 
-    return ">" + comment + "\n" + sequence
+    # prepare return string
+    return_str = ""
+    for i in range(len(sequences)):
+        if i!=0:
+            return_str = return_str + "\n"
+        return_str = return_str + ">" + comment + "\n" + sequence
+    return return_str
 
 
 @composite
