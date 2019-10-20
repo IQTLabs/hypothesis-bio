@@ -36,7 +36,7 @@ def test_sources(seq):
     assert set(seq).issubset({"\r", "\n", "A", "T", "G", "C", ">"})
 
 
-def test_fasta_minial():
+def test_fasta_minimal():
     actual = minimal(fasta())
     expected = ">\n"
 
