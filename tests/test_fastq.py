@@ -22,14 +22,14 @@ def test_fastq_quality_smallest_example():
 
 
 def test_fastq_quality_size_three_with_one_quality_score():
-    actual = minimal(fastq_quality(min_length=3, min_score=5, max_score=5))
+    actual = minimal(fastq_quality(min_size=3, min_score=5, max_score=5))
     expected = "&&&"
 
     assert actual == expected
 
 
 def test_fastq_quality_size_three_with_one_quality_score_and_sanger_offset():
-    actual = minimal(fastq_quality(min_length=3, min_score=5, max_score=5, offset=64))
+    actual = minimal(fastq_quality(min_size=3, min_score=5, max_score=5, offset=64))
     expected = "EEE"
 
     assert actual == expected
@@ -56,7 +56,7 @@ def test_fastq_entry_smallest_example():
     assert actual == expected
 
 
-@given(fastq_entry(min_length=10, max_length=10))
+@given(fastq_entry(min_size=10, max_size=10))
 def test_fastq_entry_size_over_one(fastq_string: str):
     fields = fastq_string.split("\n")
     header_begin = fields[0][0]
@@ -78,7 +78,7 @@ def test_fastq_entry_size_over_one(fastq_string: str):
     assert all(33 <= ord(c) <= MAX_ASCII for c in quality)
 
 
-@given(fastq_entry(min_length=10, max_length=10, additional_description=False))
+@given(fastq_entry(min_size=10, max_size=10, additional_description=False))
 def test_fastq_entry_size_over_one_with_comment_no_additional_description(
     fastq_string: str
 ):
@@ -105,7 +105,7 @@ def test_fastq_entry_size_over_one_with_comment_no_additional_description(
 
 @given(
     fastq_entry(
-        min_length=10, max_length=10, identifier_source=illumina_sequence_identifier()
+        min_size=10, max_size=10, identifier_source=illumina_sequence_identifier()
     )
 )
 def test_fastq_entry_size_over_one_with_illumina_id(fastq_string: str):
@@ -128,7 +128,7 @@ def test_fastq_entry_size_over_one_with_illumina_id(fastq_string: str):
     assert all(33 <= ord(c) <= MAX_ASCII for c in quality)
 
 
-@given(fastq_entry(min_length=10, max_length=10, wrap_length=3))
+@given(fastq_entry(min_size=10, max_size=10, wrap_length=3))
 def test_fastq_entry_wrapping_less_than_size_wraps_seq_and_quality(fastq_string: str):
     fields = fastq_string.split("\n")
 
@@ -138,7 +138,7 @@ def test_fastq_entry_wrapping_less_than_size_wraps_seq_and_quality(fastq_string:
     assert actual == expected, fastq_string
 
 
-@given(fastq_entry(min_length=10, max_length=10, wrap_length=30))
+@given(fastq_entry(min_size=10, max_size=10, wrap_length=30))
 def test_fastq_entry_wrapping_greater_than_size_doesnt_wrap(fastq_string: str):
     fields = fastq_string.split("\n")
 
@@ -149,7 +149,7 @@ def test_fastq_entry_wrapping_greater_than_size_doesnt_wrap(fastq_string: str):
 
 
 def test_fastq_entry_minimal_protein_source():
-    actual = minimal(fastq_entry(min_length=1, sequence_source=protein(min_size=1)))
+    actual = minimal(fastq_entry(min_size=1, sequence_source=protein(min_size=1)))
     expected = "@0\nA\n+0\n0"
 
     assert actual == expected
