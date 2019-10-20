@@ -181,3 +181,20 @@ def test_nanopore_seq_id_minimal():
     ).format("0" * 40)
 
     assert actual == expected
+
+
+def test_fastq_minial():
+    actual = minimal(fastq())
+    expected = "@0\nA\n+0\n0"
+
+    assert actual == expected
+
+
+@given(fastq(entry_source=fastq_entry(wrap_length=0), min_reads=3, max_reads=3))
+def test_fastq_min_and_max_reads_the_same_no_wrapping(fastq_file):
+    lines = fastq_file.split("\n")
+
+    actual = len(lines)
+    expected = 12
+
+    assert actual == expected

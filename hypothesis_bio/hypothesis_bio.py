@@ -519,3 +519,23 @@ def fastq_entry(
     return "@{seq_id}\n{sequence}\n+{description}\n{quality}".format(
         seq_id=seq_id, sequence=sequence, quality=quality, description=description
     )
+
+
+@composite
+def fastq(
+    draw, entry_source: SearchStrategy = None, min_reads: int = 1, max_reads: int = 100
+) -> str:
+    """Generates a string representation of a fastq file.
+
+    Arguments:
+    - `entry_source`: The search strategy to use for generating fastq entries. The
+    default (`None`) will use [`fastq_entry`](#fastq_entry) with default settings.
+    - `min_reads`: Minimum number of fastq entries to generate.
+    - `max_reads`: Maximum number of fastq entries to generate.
+    """
+    if entry_source is None:
+        entry_source = fastq_entry()
+
+    num_reads = draw(integers(min_value=min_reads, max_value=max_reads))
+
+    return "\n".join([draw(entry_source) for i in range(num_reads)])
