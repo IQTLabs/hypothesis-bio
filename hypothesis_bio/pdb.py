@@ -3,6 +3,7 @@
 """Main module."""
 
 from datetime import date
+from string import ascii_letters, digits
 
 from hypothesis.strategies import (
     booleans,
@@ -15,9 +16,9 @@ from hypothesis.strategies import (
     text,
 )
 
-ACHAR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ACHAR = ascii_letters
 ATOM = "AUCGTNWSMKRYBDHV"
-ALPHANUMERIC = ACHAR + "1234567890"
+ALPHANUMERIC = ACHAR + digits
 
 
 @composite
