@@ -26,12 +26,14 @@ def fastq_quality(
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset.
+
     ::: tip Note
-        The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
-        then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
-        then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
-        See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on
-        the FASTQ format (and its quality score encoding).
+
+    The default quality string is 'fastq-sanger' format.
+    If you would like 'fastq-illumina' then set `offset` to 64 and `max_score` to 62.
+    If you would like `fastq-solexa` then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
+    See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on the FASTQ format (and its quality score encoding).
+
     :::
     """
     min_codepoint = min_score + offset
@@ -75,19 +77,18 @@ def fastq_entry(
     - `min_score`: Lowest quality (PHRED) score to use.
     - `max_score`: Highest quality (PHRED) score to use.
     - `offset`: ASCII encoding offset for quality string.
-    - `sequence_source`: Search strategy to generate the sequence from. By default
-    [`dna()`](#dna) will be used.
-    - `identifier_source`: Search strategy to generate the sequence identifier from. If
-    `None` then random text will be generated.
+    - `sequence_source`: Search strategy to generate the sequence from. By default [`dna()`](#dna) will be used.
+    - `identifier_source`: Search strategy to generate the sequence identifier from. If `None` then random text will be generated.
     - `additional_description`: Add sequence ID and comment after `+` on third line.
-    - `wrap_length`: Number of characters to wrap the sequence and quality strings on. Set
-    to 0 to disable wrapping.
+    - `wrap_length`: Number of characters to wrap the sequence and quality strings on. Set to 0 to disable wrapping.
+
     ::: tip Note
-        The default quality string is 'fastq-sanger' format. If you would like 'fastq-illumina'
-        then set `offset` to 64 and `max_score` to 62. If you would like `fastq-solexa`
-        then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
-        See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on
-        the FASTQ format (and its quality score encoding).
+
+    The default quality string is 'fastq-sanger' format.
+    If you would like 'fastq-illumina' then set `offset` to 64 and `max_score` to 62.
+    If you would like `fastq-solexa` then set `offset` to 64, `min_score` to -5 and `max_score` to 62.
+    See <https://academic.oup.com/nar/article/38/6/1767/3112533> for more details on the FASTQ format (and its quality score encoding).
+
     :::
     """
     if identifier_source is None:
@@ -128,9 +129,9 @@ def fastq(
     max_reads: int = 100,
 ) -> str:
     """Generates a string representation of a fastq file.
+
     Arguments:
-    - `entry_source`: The search strategy to use for generating fastq entries. The
-    default (`None`) will use [`fastq_entry`](#fastq_entry) with default settings.
+    - `entry_source`: The search strategy to use for generating fastq entries. The default (`None`) will use [`fastq_entry`](#fastq_entry) with default settings.
     - `min_reads`: Minimum number of fastq entries to generate.
     - `max_reads`: Maximum number of fastq entries to generate.
     """
