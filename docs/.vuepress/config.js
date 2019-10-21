@@ -4,14 +4,34 @@ module.exports = {
   base: "/hypothesis-bio/",
   plugins: ["@vuepress/last-updated"],
   themeConfig: {
-    sidebar: "auto",
+    displayAllHeaders: true,
+    sidebar: [
+      "/",
+      "/guide",
+      "/contributing",
+      {
+        title: "API Reference",
+        collapsable: false,
+        children: [
+          "/api/blast6",
+          "/api/fasta",
+          "/api/fastq",
+          "/api/sequence_identifiers",
+          "/api/sequences"
+        ]
+      }
+    ],
     repo: "Lab41/hypothesis-bio",
     smoothScroll: true,
     nav: [
-      { text: "Home", link: "/" },
-      { text: "Guide", link: "/guide" },
-      { text: "Contribute", link: "/contributing" },
-      { text: "API Reference", link: "/api" }
+      {
+        text: "Hypothesis Docs",
+        link: "https://hypothesis.readthedocs.io/en/latest/"
+      },
+      {
+        text: "Get Help",
+        link: "https://github.com/Lab41/hypothesis-bio/issues/new"
+      }
     ]
   }
 }
