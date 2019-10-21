@@ -11,10 +11,10 @@ from hypothesis.strategies import (
     composite,
     dates,
     floats,
+    from_regex,
     integers,
     sampled_from,
     text,
-    from_regex
 )
 
 ACHAR = ascii_letters
@@ -38,6 +38,7 @@ def generate_idcode(draw):
     """Generates a value of type IDCode in PDB format
     """
     return draw(from_regex(r"[0-9][a-zA-Z0-9]{3}", fullmatch=True))
+
 
 @composite
 def generate_token(draw, min_size=1, max_size=None):
