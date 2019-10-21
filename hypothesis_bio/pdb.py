@@ -4,7 +4,7 @@
 
 from datetime import date
 
-from hypothesis.strategies import characters, composite, dates, floats, integers, text
+from hypothesis.strategies import characters, composite, dates, floats, integers, text, booleans
 
 ACHAR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ATOM = "AUCGTNWSMKRYBDHV"
@@ -56,9 +56,10 @@ def generate_lstring(draw, min_size=1, max_size=None):
     """Generates a value of Type LString in PDB format
 
     Arguments:
-    - `size`: Size of the lstring to be generated.
+    - `min_size`: Minimum Size of the lstring to be generated.
+    - `max_size`: Maximum size of the lstring to be generated.
     """
-    return draw(
+    string = draw(
         text(
             alphabet=characters(min_codepoint=32, max_codepoint=126),
             min_size=min_size,
@@ -66,6 +67,7 @@ def generate_lstring(draw, min_size=1, max_size=None):
         )
     )
 
+    return string.replace(";", "\\;").replace(":","\\:").replace(",","\\,")
 
 @composite
 def generate_real(draw, min_value=0.0, max_value=None):
@@ -186,3 +188,78 @@ def generate_caveat(draw, continuation_number=None):
     code = draw(generate_idcode())
     caveat = draw(generate_lstring(min_size=0, max_size=60))
     return "CAVEAT  " + cont_string + code + "    " + caveat  
+
+
+@composite
+def generate_compnd(draw, continuation_number=None):
+    """Generates the COMPND record in PDB
+
+    Arguments:
+    - `continuation_number`: The number of caveat record in this PDB entry. Must be either None or >=2.
+    """
+    record_string = "COMPND "
+    cont_string = ""
+    if continuation_numer is None:
+        cont_string = "   "
+    else:
+        cont_string = str(continuation_number).rjust(2, ' ') + " "
+
+    record_string += cont_string + " "
+
+    property_list = ["MOL_ID", "MOLECULE", "CHAIN", "FRAGMENT", "SYNONYM", "EC", "ENGINEERED", "MUTATION", "OTHER_DETAILS"]
+    choice = draw(sampled_from(property_list))
+    record_string += choice + ": "
+    if choice == "MOL_ID":
+        val = draw(integers())
+        record_string += str(val) + ";"
+    elif choice == "MOLECULE":
+        char_space_left = 80 - (len(record_string) + 1)
+        val = draw(generate_lstring(min_size=1, max_size=char_space_left))
+        record_string += val + ";"
+    elif choice == "CHAIN":
+        char_space_left = 80 - (len(record_string) + 1)
+        chain_space_left = int(char_space_left/3)
+        val = draw(integers(max_value=chain_space_left))
+        for i in range(val):
+            chain = draw(text(alphabet=ACHAR, min_size=1, max_size=1))
+            if i == val-1:
+                record_string += chain + ";"
+            else:
+                record_string += chain + "," 
+    elif choice == "FRAGMENT":
+        #TODO Verify. I have no idea what needs to go here.
+        char_space_left = 80 - (len(record_string) + 1)
+        val = draw(generate_lstring(min_size=1, max_size=char_space_left))
+        record_string += val + ";"
+    elif choice == "SYNONYM":
+        char_space_left = 80 - (len(record_string) + 1)
+        val = draw(generate_lstring(min_size=1, max_size=char_space_left))
+        record_string += val + ";"
+    elif choice == "ENGINEERED":
+        val = draw(booleans())
+        if val:
+            record_string += "YES;"
+        else:
+            record_string += "NO;"
+    elif choice == "OTHER_DETAILS":
+        char_space_left = 80 - (len(record_string) + 1)
+        val = draw(generate_lstring(min_size=1, max_size=char_space_left))
+        record_string += val + ";"
+    elif choice == "MUTATION":        
+        val = draw(booleans())
+        if val:
+            record_string += "YES;"
+        else:
+            record_string += "NO;"
+    elif choice == "EC":
+        val = draw(booleans())
+        if val:
+            #TODO: Implement support for multiple ECs
+            val1 = draw(integers())
+            val2 = draw(integers())
+            val3 = draw(integers())
+            val4 = draw(integers())
+            record_string += str(val1) + "." + str(val2) + "." + str(val3) + "." + str(val4) + ";"
+        else:
+            record_string += "NUMBER NOT ASSIGNED;"
+    return record_string 
