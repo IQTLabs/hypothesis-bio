@@ -4,8 +4,8 @@ author:
   - Benjamin Lee
   # Department of Computer Science, School of Engineering and Applied Sciences, Harvard University, Cambridge, MA, 02138, USA
   # Lab41, In-Q-Tel, Menlo Park, CA, 94025, USA
-  - Author 2
-  # Author 2 affiliation goes here
+  - Vaastav Anand
+  # Department of Computer Sceince, University of British Columbia, Vancouver, BC, V6T 1Z4, Canada
 abstract: |
   Sentence one of the abstract goes here.
   Sentence two goes here.
