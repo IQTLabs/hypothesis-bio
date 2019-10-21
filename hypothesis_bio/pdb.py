@@ -239,7 +239,7 @@ def generate_compnd(draw, continuation_number=None):
     elif choice == "CHAIN":
         char_space_left = 80 - (len(record_string) + 1)
         chain_space_left = int(char_space_left / 3)
-        val = draw(integers(max_value=chain_space_left))
+        val = draw(integers(min_value=1, max_value=chain_space_left))
         for i in range(val):
             chain = draw(text(alphabet=ACHAR, min_size=1, max_size=1))
             if i == val - 1:

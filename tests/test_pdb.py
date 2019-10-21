@@ -101,3 +101,55 @@ def test_generate_compnd_molid():
     assert (
         minimal(generate_compnd(), lambda x: "MOL_ID" in x)
     ) == "COMPND     MOL_ID: 0;"
+
+
+def test_generate_compnd_molecule():
+    assert (
+        minimal(generate_compnd(), lambda x: "MOLECULE" in x)
+    ) == "COMPND     MOLECULE: 0;"
+
+
+def test_generate_compnd_chain():
+    assert (
+        minimal(generate_compnd(), lambda x: "CHAIN" in x)
+    ) == "COMPND     CHAIN: A;"
+
+
+def test_generate_compnd_fragment():
+    assert (
+        minimal(generate_compnd(), lambda x: "FRAGMENT" in x)
+    ) == "COMPND     FRAGMENT: 0;"
+
+
+def test_generate_compnd_synonym():
+    assert (
+        minimal(generate_compnd(), lambda x: "SYNONYM" in x)
+    ) == "COMPND     SYNONYM: 0;"
+
+
+def test_generate_compnd_engineered_yes():
+    assert (
+        minimal(generate_compnd(), lambda x: "ENGINEERED" in x and "YES" in x)
+    ) == "COMPND     ENGINEERED: YES;"
+
+
+def test_generate_compnd_engineered_no():
+    assert (
+        minimal(generate_compnd(), lambda x: "ENGINEERED" in x and "NO" in x)
+    ) == "COMPND     ENGINEERED: NO;"
+
+
+def test_generate_compnd_ec():
+    assert (
+        minimal(generate_compnd(), lambda x: "EC:" in x)
+    ) == "COMPND     EC: NUMBER NOT ASSIGNED;"
+
+
+def test_generate_compnd_ec_assigned():
+    assert (
+        minimal(generate_compnd(), lambda x: "EC:" in x and x.count(".") == 3)
+    ) == "COMPND     EC: 0.0.0.0;"
+
+
+def test_generate_compnd_continuation_count():
+    assert (minimal(generate_compnd(continuation_number=5))) == "COMPND  5  MOL_ID: 0;"
