@@ -5,7 +5,7 @@ Every little bit helps and it's always appreciated.
 
 There are a bunch of ways to contribute:
 
-## Types of Contribution
+## Types of contribution
 
 ### File bug reports
 

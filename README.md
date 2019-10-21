@@ -3,18 +3,16 @@
 [![Build status](https://github.com/Lab41/hypothesis-bio/workflows/CI/badge.svg)](https://github.com/Lab41/hypothesis-bio/actions)
 [![codecov](https://codecov.io/gh/Lab41/hypothesis-bio/branch/master/graph/badge.svg)](https://codecov.io/gh/Lab41/hypothesis-bio/)
 
-Hypothesis-Bio is a [Hypothesis](https://github.com/HypothesisWorks/hypothesis) extension for property-based testing of bioinformatic softwares.
+Hypothesis-Bio is a [Hypothesis](https://github.com/HypothesisWorks/hypothesis) extension for property-based testing of bioinformatic software.
 
-Automates the testing process to validate the correctness of bioinformatics tools by generating a wide range of test cases beyond human testers. Finds and returns the minimal error test case that causes an exception.
+Automates the testing process to validate the correctness of bioinformatics tools by generating a wide range of test cases beyond human testers.
+Finds and returns the minimal error test case that causes an exception.
 
-### Features
+## Features
 
 This module provides a Hypothesis strategy for generating biological data formats. This can be used to efficiently and thoroughly test your code.
 
-*Currently supports dna, rna, protein, cds, kmers, fasta, & fastq formats.*
-
-[API Reference](https://lab41.github.io/hypothesis-bio/api.html)
-
+_Currently supports DNA, RNA, protein, CDS, k-mers, FASTA, & FASTQ formats._
 
 ## Quick Start
 
