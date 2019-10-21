@@ -1,4 +1,6 @@
 from hypothesis_bio.pdb import (
+    generate_caveat,
+    generate_compnd,
     generate_date,
     generate_header,
     generate_idcode,
@@ -9,7 +11,6 @@ from hypothesis_bio.pdb import (
     generate_split,
     generate_title,
     generate_token,
-    generate_caveat,
 )
 
 from .minimal import minimal
@@ -86,8 +87,17 @@ def test_generate_caveat():
 
 
 def test_generate_non_empty_caveat():
-    assert minimal(generate_caveat(), lambda x: len(x) > 19) == "CAVEAT" + " " * 5 + "0000" + "    " + "0"
+    assert (
+        minimal(generate_caveat(), lambda x: len(x) > 19)
+        == "CAVEAT" + " " * 5 + "0000" + "    " + "0"
+    )
 
 
 def test_generate_caveat_continuation():
     assert minimal(generate_caveat(continuation_number=5)) == "CAVEAT   5 0000    "
+
+
+def test_generate_compnd_molid():
+    assert (
+        minimal(generate_compnd(), lambda x: "MOL_ID" in x)
+    ) == "COMPND     MOL_ID: 0;"
