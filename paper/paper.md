@@ -6,6 +6,8 @@ author:
   # Lab41, In-Q-Tel, Menlo Park, CA, 94025, USA
   - Vaastav Anand
   # Department of Computer Sceince, University of British Columbia, Vancouver, BC, V6T 1Z4, Canada
+  - Michael B. Hall (ORCID 0000-0003-3683-6208)
+  # EMBL-EBI, Hinxton, UK
 abstract: |
   Sentence one of the abstract goes here.
   Sentence two goes here.
