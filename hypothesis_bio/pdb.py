@@ -28,8 +28,7 @@ def generate_date(draw):
     month = sampled_date.strftime("%b").upper()
     year = sampled_date.strftime("%Y")[2:]
     day = sampled_date.strftime("%d")
-    if len(day) == 1:
-        day = "0" + day
+    day = day.rjust(2, "0")
     return day + "-" + month + "-" + year
 
 
