@@ -14,6 +14,7 @@ from hypothesis.strategies import (
     integers,
     sampled_from,
     text,
+    from_regex
 )
 
 ACHAR = ascii_letters
@@ -27,9 +28,8 @@ def generate_date(draw):
     """
     sampled_date = draw(dates(min_value=date(1901, 1, 1), max_value=date.today()))
     month = sampled_date.strftime("%b").upper()
-    year = sampled_date.strftime("%Y")[2:]
+    year = sampled_date.strftime("%y")
     day = sampled_date.strftime("%d")
-    day = day.rjust(2, "0")
     return day + "-" + month + "-" + year
 
 
@@ -37,10 +37,7 @@ def generate_date(draw):
 def generate_idcode(draw):
     """Generates a value of type IDCode in PDB format
     """
-    first_char = str(draw(integers(min_value=0, max_value=9)))
-    last3_char = draw(text(alphabet=ALPHANUMERIC, min_size=3, max_size=3))
-    return first_char + last3_char
-
+    return draw(from_regex(r"[0-9][a-zA-Z0-9]{3}", fullmatch=True))
 
 @composite
 def generate_token(draw, min_size=1, max_size=None):
