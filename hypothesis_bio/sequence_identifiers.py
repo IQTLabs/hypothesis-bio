@@ -12,6 +12,8 @@ from hypothesis.strategies import (
 
 from . import MAX_ASCII
 
+"""Strategies for generating sequence identifiers for biological data formats such as [FASTA](/api/fasta) and [FASTQ](/api/fastq)."""
+
 
 @composite
 def sequence_identifier(
@@ -20,7 +22,7 @@ def sequence_identifier(
     min_size: int = 0,
     max_size: Optional[int] = None,
 ) -> str:
-    """Generates a sequence identifier.
+    """Generates sequence identifiers.
 
     ### Arguments
     - `blacklist_characters`: Characters to not include in the sequence ID.
@@ -42,7 +44,8 @@ def sequence_identifier(
 
 @composite
 def illumina_sequence_identifier(draw) -> str:
-    """Generate an Illumina-style sequence identifier.
+    """Generates Illumina-style sequence identifiers.
+
     ::: tip Note
     Specifications taken from Specifications taken from [here](https://support.illumina.com/help/BaseSpace_Sequence_Hub/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm)
     :::
@@ -85,7 +88,7 @@ def illumina_sequence_identifier(draw) -> str:
 
 @composite
 def nanopore_sequence_identifier(draw) -> str:
-    """Generate a Nanopore-style sequence identifier.
+    """Generates Nanopore-style sequence identifiers.
     ::: tip Note
     No formal specifications could be found, this strategy is based off a header produced from `Guppy` v2.1.3:
         @db127b21-9336-4052-8a8e-5b5d6ac0e3be runid=700c35056d5bf4191f3f9ade0cb342d8406f8ea4 sampleid=madagascar_tb_mdr_3 read=20199 ch=214 start_time=2018-02-26T21:39:56Z

@@ -11,6 +11,8 @@ from .utilities import (
     stop_codons,
 )
 
+"""Strategies for generating biological sequences."""
+
 
 @composite
 def dna(
@@ -110,7 +112,7 @@ def protein(
 
 @composite
 def start_codon(draw, allow_ambiguous=True) -> str:
-    """Strategy to generate [start codons](https://en.wikipedia.org/wiki/Start_codon).
+    """Generates [start codons](https://en.wikipedia.org/wiki/Start_codon).
 
     ### Arguments
     - `allow_ambiguous`: Whether ambiguous bases are permitted.
@@ -122,7 +124,7 @@ def start_codon(draw, allow_ambiguous=True) -> str:
 
 @composite
 def stop_codon(draw, allow_ambiguous=True) -> str:
-    """Strategy to generate [stop codons](https://en.wikipedia.org/wiki/Stop_codon).
+    """Generates [stop codons](https://en.wikipedia.org/wiki/Stop_codon).
 
     ### Arguments
     - `allow_ambiguous`: Whether ambiguous bases are permitted.
@@ -212,10 +214,10 @@ def cds(
 
 @composite
 def kmers(draw, seq: str, k: int) -> str:
-    """Generates k-mers (short sliding window substrings) from a given sequence
+    """Generates *k*-mers (short sliding window substrings) from a given sequence.
 
     ### Arguments
-    - `seq`: The sequence to be used for generating k-mers
+    - `seq`: The sequence to be used for generating *k*-mers
     - `k`: Size of the substrings to be generated
     """
     if len(seq) < k:

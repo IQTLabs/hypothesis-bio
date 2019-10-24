@@ -9,6 +9,8 @@ from . import MAX_ASCII
 from .sequence_identifiers import sequence_identifier
 from .sequences import dna
 
+"""Strategies for generating [FASTQ](https://en.wikipedia.org/wiki/FASTQ_format) formatted sequence and quality data."""
+
 
 @composite
 def fastq_quality(
@@ -19,7 +21,8 @@ def fastq_quality(
     max_score: int = 93,
     offset: int = 33,
 ) -> str:
-    """Generates the quality string for the FASTQ format
+    """Generates quality strings for the FASTQ format.
+
     ### Arguments
     - `min_size`: Minimum length of the quality string.
     - `max_size`: Maximum length of the quality string.
@@ -70,7 +73,7 @@ def fastq_entry(
     additional_description: bool = True,
     wrap_length: int = 80,
 ) -> str:
-    """Generate an entry in FASTQ format.
+    """Generates entries in FASTQ format.
 
     ### Arguments
     - `min_size`: Minimum length of the sequence and quality string.
@@ -129,12 +132,12 @@ def fastq(
     min_reads: int = 1,
     max_reads: int = 100,
 ) -> str:
-    """Generates a string representation of a fastq file.
+    """Generates string representations of FASTQ files.
 
     ### Arguments
-    - `entry_source`: The search strategy to use for generating fastq entries. The default (`None`) will use [`fastq_entry`](#fastq_entry) with default settings.
-    - `min_reads`: Minimum number of fastq entries to generate.
-    - `max_reads`: Maximum number of fastq entries to generate.
+    - `entry_source`: The search strategy to use for generating FASTQ entries. The default (`None`) will use [`fastq_entry`](#fastq_entry) with default settings.
+    - `min_reads`: Minimum number of FASTQ entries to generate.
+    - `max_reads`: Maximum number of FASTQ entries to generate.
     """
     if entry_source is None:
         entry_source = fastq_entry()
