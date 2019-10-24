@@ -88,7 +88,9 @@ def nanopore_sequence_identifier(draw) -> str:
     """Generate a Nanopore-style sequence identifier.
     ::: tip Note
     No formal specifications could be found, this strategy is based off a header produced from `Guppy` v2.1.3:
+
         @db127b21-9336-4052-8a8e-5b5d6ac0e3be runid=700c35056d5bf4191f3f9ade0cb342d8406f8ea4 sampleid=madagascar_tb_mdr_3 read=20199 ch=214 start_time=2018-02-26T21:39:56Z
+
     :::
     """
     read_id = draw(
