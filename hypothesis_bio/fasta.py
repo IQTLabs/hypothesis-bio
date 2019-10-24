@@ -7,6 +7,8 @@ from hypothesis.strategies import characters, composite, integers, sampled_from,
 
 from .sequences import dna
 
+"""Strategies for generating [FASTA](https://en.wikipedia.org/wiki/FASTA_format) formatted sequence."""
+
 
 @composite
 def fasta_entry(
@@ -16,9 +18,14 @@ def fasta_entry(
     wrap_length: Optional[int] = None,
     allow_windows_line_endings=True,
 ) -> str:
-    """Generates FASTA sequences.
+    """Generates individual FASTA entries.
 
-    Arguments:
+    ::: warning Warning
+    Unless you specifically want to generate single FASTA-formatted entries, use [`fasta`](#fasta) instead when testing code that expects FASTA strings.
+    :::
+
+    ### Arguments
+
     - `comment_source`: The source of the comments. Defaults to `text(alphabet=characters(min_codepoint=32, max_codepoint=126))`)
     - `sequence_source`: The source of the sequence. Defaults to [`dna`](#dna).
     - `wrap_length`: The width to wrap the sequence on. If `None`, mixed sizes are used.
@@ -72,13 +79,12 @@ def fasta(
     min_reads: int = 1,
     max_reads: int = 100,
 ) -> str:
-    """Generates a string representation of a fasta file.
+    """Generates string representations of FASTA files.
 
-    Arguments:
-    - `entry_source`: The search strategy to use for generating fasta entries. The
-    default (`None`) will use [`fasta_entry`](#fasta_entry) with default settings.
-    - `min_reads`: Minimum number of fasta entries to generate.
-    - `max_reads`: Maximum number of fasta entries to generate.
+    ### Arguments
+    - `entry_source`: The search strategy to use for generating FASTA entries. The default (`None`) will use [`fasta_entry`](#fasta_entry) with default settings.
+    - `min_reads`: Minimum number of FASTA entries to generate.
+    - `max_reads`: Maximum number of FASTA entries to generate.
     """
     if entry_source is None:
         entry_source = fasta_entry()
