@@ -23,7 +23,7 @@ def dna(
 ):
     """Generates DNA sequences.
 
-    Arguments:
+    ### Arguments
     - `allow_ambiguous`: Whether ambiguous bases are permitted.
     - `allow_gaps`: Whether a `-` may be in the DNA sequence.
     - `uppercase_only`: Whether to use only uppercase characters.
@@ -51,7 +51,7 @@ def rna(
 ):
     """Generates RNA sequences.
 
-    Arguments:
+    ### Arguments
     - `allow_ambiguous`: Whether ambiguous bases are permitted.
     - `allow_gaps`: Whether a `-` may be in the RNA sequence.
     - `allow_lowercase`: Whether lowercase characters should be used.
@@ -83,7 +83,7 @@ def protein(
     By default, only canonical amino acids are used.
     :::
 
-    Arguments:
+    ### Arguments
     - `allow_extended`: Whether the extended amino acid alphabet should be used.
     - `allow_ambiguous`: Whether ambiguous amino acids are permitted.
     - `single_letter_protein`: Whether 1-letter or 3-letter abbreviations of proteins should be used.
@@ -112,7 +112,7 @@ def protein(
 def start_codon(draw, allow_ambiguous=True) -> str:
     """Strategy to generate [start codons](https://en.wikipedia.org/wiki/Start_codon).
 
-    Arguments:
+    ### Arguments
     - `allow_ambiguous`: Whether ambiguous bases are permitted.
     """
     return draw(
@@ -124,7 +124,7 @@ def start_codon(draw, allow_ambiguous=True) -> str:
 def stop_codon(draw, allow_ambiguous=True) -> str:
     """Strategy to generate [stop codons](https://en.wikipedia.org/wiki/Stop_codon).
 
-    Arguments:
+    ### Arguments
     - `allow_ambiguous`: Whether ambiguous bases are permitted.
     """
     return draw(sampled_from(ambiguous_stop_codons if allow_ambiguous else stop_codons))
@@ -143,7 +143,7 @@ def cds(
 ) -> str:
     """Generates [coding DNA sequences](https://en.wikipedia.org/wiki/Coding_region) (CDSs).
 
-    Arguments:
+    ### Arguments
     - `include_start_codon`: Whether to include a [start codon](#start_codon) at the beginning.
     - `include_stop_codon`: Whether to include a [stop codon](#stop_codon) at the end.
     - `allow_internal_stop_codons`: Whether stop codons may occur at any place other than the end.
@@ -214,7 +214,7 @@ def cds(
 def kmers(draw, seq: str, k: int) -> str:
     """Generates k-mers (short sliding window substrings) from a given sequence
 
-    Arguments:
+    ### Arguments
     - `seq`: The sequence to be used for generating k-mers
     - `k`: Size of the substrings to be generated
     """

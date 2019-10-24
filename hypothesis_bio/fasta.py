@@ -18,7 +18,7 @@ def fasta_entry(
 ) -> str:
     """Generates FASTA sequences.
 
-    Arguments:
+    ### Arguments
     - `comment_source`: The source of the comments. Defaults to `text(alphabet=characters(min_codepoint=32, max_codepoint=126))`)
     - `sequence_source`: The source of the sequence. Defaults to [`dna`](#dna).
     - `wrap_length`: The width to wrap the sequence on. If `None`, mixed sizes are used.
@@ -74,7 +74,7 @@ def fasta(
 ) -> str:
     """Generates a string representation of a fasta file.
 
-    Arguments:
+    ### Arguments
     - `entry_source`: The search strategy to use for generating fasta entries. The
     default (`None`) will use [`fasta_entry`](#fasta_entry) with default settings.
     - `min_reads`: Minimum number of fasta entries to generate.

@@ -22,7 +22,7 @@ def sequence_identifier(
 ) -> str:
     """Generates a sequence identifier.
 
-    Arguments:
+    ### Arguments
     - `blacklist_characters`: Characters to not include in the sequence ID.
     - `min_size`: Minimum length of the sequence ID.
     - `max_size`: Maximum length of the sequence ID.

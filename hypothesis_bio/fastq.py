@@ -20,7 +20,7 @@ def fastq_quality(
     offset: int = 33,
 ) -> str:
     """Generates the quality string for the FASTQ format
-    Arguments:
+    ### Arguments
     - `min_size`: Minimum length of the quality string.
     - `max_size`: Maximum length of the quality string.
     - `min_score`: Lowest quality (PHRED) score to use.
@@ -71,7 +71,8 @@ def fastq_entry(
     wrap_length: int = 80,
 ) -> str:
     """Generate an entry in FASTQ format.
-    Arguments:
+
+    ### Arguments
     - `min_size`: Minimum length of the sequence and quality string.
     - `max_size`: Maximum length of the sequence and quality string.
     - `min_score`: Lowest quality (PHRED) score to use.
@@ -130,7 +131,7 @@ def fastq(
 ) -> str:
     """Generates a string representation of a fastq file.
 
-    Arguments:
+    ### Arguments
     - `entry_source`: The search strategy to use for generating fastq entries. The default (`None`) will use [`fastq_entry`](#fastq_entry) with default settings.
     - `min_reads`: Minimum number of fastq entries to generate.
     - `max_reads`: Maximum number of fastq entries to generate.

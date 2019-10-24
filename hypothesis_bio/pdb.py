@@ -44,7 +44,7 @@ def generate_idcode(draw):
 def generate_token(draw, min_size=1, max_size=None):
     """Generates a value of type Token in PDB format
 
-    Arguments:
+    ### Arguments
     - `min_size`: Minimum size of the token to be generated
     - `max_size`: Maximum size of the token to be generated
     """
@@ -62,7 +62,7 @@ def generate_token(draw, min_size=1, max_size=None):
 def generate_lstring(draw, min_size=1, max_size=None):
     """Generates a value of Type LString in PDB format
 
-    Arguments:
+    ### Arguments
     - `min_size`: Minimum Size of the lstring to be generated.
     - `max_size`: Maximum size of the lstring to be generated.
     """
@@ -112,7 +112,7 @@ def generate_header(draw):
 def generate_obslte(draw, continuation_number=None, min_entries=1, max_entries=9):
     """Generates the Obslte record in PDB
 
-    Arguments:
+    ### Arguments
     - `continuation_number`: The number of obslte record in this PDB entry. Must either be None or >=2
     - `min_entries`: The minimum number of extra obsolete entries to be generated.
     - `max_entries`: The maximum number of extra obsolete entries to be generated.
@@ -141,7 +141,7 @@ def generate_obslte(draw, continuation_number=None, min_entries=1, max_entries=9
 def generate_title(draw, continuation_number=None):
     """Generates the Title record in PDB
 
-    Arguments:
+    ### Arguments
     - `continuation_number`: The number of Title record in this PDB entry. Must either be None or >=2.
     """
     cont_string = ""
@@ -158,7 +158,7 @@ def generate_title(draw, continuation_number=None):
 def generate_split(draw, continuation_number=None, min_entries=1, max_entries=14):
     """Generates the Split record in PDB
 
-    Arguments:
+    ### Arguments
     - `continuation_number`: The number of split record in this PDB entry. Must either be None or >=2
     - `min_entries`: The minimum number of entries to be generated.
     - `max_entries`: The maximum number of entries to be generated.
@@ -184,7 +184,7 @@ def generate_split(draw, continuation_number=None, min_entries=1, max_entries=14
 def generate_caveat(draw, continuation_number=None):
     """Generates the Caveat record in PDB
 
-    Arguments:
+    ### Arguments
     - `continuation_number`: The number of caveat record in this PDB entry. Must be either None or >=2.
     """
     cont_string = ""
@@ -202,7 +202,7 @@ def generate_caveat(draw, continuation_number=None):
 def generate_compnd(draw, continuation_number=None):
     """Generates the COMPND record in PDB
 
-    Arguments:
+    ### Arguments
     - `continuation_number`: The number of caveat record in this PDB entry. Must be either None or >=2.
     """
     record_string = "COMPND "
