@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*
+
+"""Strategies for generating [FASTA](https://en.wikipedia.org/wiki/FASTA_format) formatted sequence."""
+
 from textwrap import fill
 from typing import Optional
 
@@ -6,8 +10,6 @@ from hypothesis.searchstrategy import SearchStrategy
 from hypothesis.strategies import characters, composite, integers, sampled_from, text
 
 from .sequences import dna
-
-"""Strategies for generating [FASTA](https://en.wikipedia.org/wiki/FASTA_format) formatted sequence."""
 
 
 @composite

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*
+
+"""Strategies for generating [FASTQ](https://en.wikipedia.org/wiki/FASTQ_format) formatted sequence and quality data."""
+
 from textwrap import fill
 from typing import Optional
 
@@ -8,8 +12,6 @@ from hypothesis.strategies import characters, composite, integers, text
 from . import MAX_ASCII
 from .sequence_identifiers import sequence_identifier
 from .sequences import dna
-
-"""Strategies for generating [FASTQ](https://en.wikipedia.org/wiki/FASTQ_format) formatted sequence and quality data."""
 
 
 @composite

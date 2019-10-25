@@ -1,3 +1,7 @@
+#  -*- coding: utf-8 -*
+
+"""Strategies for generating sequence identifiers for biological data formats such as [FASTA](/api/fasta) and [FASTQ](/api/fastq)."""
+
 from typing import Optional, Sequence
 
 from hypothesis import assume
@@ -11,8 +15,6 @@ from hypothesis.strategies import (
 )
 
 from . import MAX_ASCII
-
-"""Strategies for generating sequence identifiers for biological data formats such as [FASTA](/api/fasta) and [FASTQ](/api/fastq)."""
 
 
 @composite

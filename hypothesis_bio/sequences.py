@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*
+
+"""Strategies for generating biological sequences."""
+
 from typing import Optional
 
 from hypothesis import assume
@@ -10,8 +14,6 @@ from .utilities import (
     start_codons,
     stop_codons,
 )
-
-"""Strategies for generating biological sequences."""
 
 
 @composite
