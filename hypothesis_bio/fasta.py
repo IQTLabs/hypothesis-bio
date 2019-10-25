@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 
-"""Strategies for generating [FASTA](https://en.wikipedia.org/wiki/FASTA_format) formatted sequence."""
+"""Strategies for generating [FASTA](https://en.wikipedia.org/wiki/FASTA_format) formatted sequences."""
 
 from textwrap import fill
 from typing import Optional
