@@ -11,9 +11,13 @@ Finish this section
 Imagine you're testing the GC-content calculator, except it's written in Node.js and reads the sequence from [stdin](<https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)>):
 
 ```js
+// read the data from stdin
+var fs = require("fs")
+var data = fs.readFileSync(0, "utf-8")
+
+// count the Gs and Cs
 var g_count = 0
 var c_count = 0
-
 for (const letter of data.slice(0, -1)) {
   if (letter == "G") {
     g_count++
@@ -21,6 +25,8 @@ for (const letter of data.slice(0, -1)) {
     c_count++
   }
 }
+
+// log the GC content to stdout
 console.log((g_count + c_count) / (data.length - 1))
 ```
 
