@@ -6,8 +6,8 @@ from textwrap import fill
 from typing import Optional
 
 from hypothesis import assume
-from hypothesis.searchstrategy import SearchStrategy
-from hypothesis.strategies import characters, composite, integers, sampled_from, text
+
+from hypothesis.strategies import SearchStrategy, characters, composite, integers, sampled_from, text
 
 from .sequences import dna
 

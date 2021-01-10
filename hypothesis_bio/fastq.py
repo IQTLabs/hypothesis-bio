@@ -6,8 +6,8 @@ from textwrap import fill
 from typing import Optional
 
 from hypothesis import assume
-from hypothesis.searchstrategy import SearchStrategy
-from hypothesis.strategies import characters, composite, integers, text
+ 
+from hypothesis.strategies import SearchStrategy, characters, composite, integers, text
 
 from . import MAX_ASCII
 from .sequence_identifiers import sequence_identifier
