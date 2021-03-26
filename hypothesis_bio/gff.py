@@ -542,64 +542,74 @@ def gff_attributes(draw):
 @composite
 def gff_entry(
     draw,
-    seqid = None,
-    source = None,
-    the_type = None,
-    start = None,
-    end = None,
-    score = None,
-    strand = None,
-    phase = None,
-    attributes = None
+    seqid: SearchStrategy = None,
+    source: SearchStrategy = None,
+    the_type: SearchStrategy = None,
+    start: SearchStrategy = None,
+    end: SearchStrategy = None,
+    score: SearchStrategy = None,
+    strand: SearchStrategy = None,
+    phase: SearchStrategy = None,
+    attributes: SearchStrategy = None
 ) -> str:
+    """Generates inidividual GFF entries
+    ::: warning Warning
+    Unless you want to generate single GFF-formatted entries, use [`fasta`](#fasta) instead when testing code that expects GFF strings.
+    :::
+
+    ### Arguments
+    - `seqid`: Source for generating name of the chromosome or scaffold. Defaults to a random ASCII string
+    - `source`: name of the program that geenerated this feature. Defaults to a random ASCII string 
+    - `the_type`
+    """
     gff = []
     if seqid is None:
         gff.append(draw(text(alphabet=characters(min_codepoint=32, max_codepoint=126), min_size = 1)))
     else:
-        gff.append(seqid)
+        gff.append(draw(seqid))
 
     if source is None:
         gff.append(draw(text(alphabet=characters(min_codepoint=32, max_codepoint=126), min_size = 1)))
     else:
-        gff.append(source)
+        gff.append(draw(source))
         
     if the_type is None:
         gff.append(draw(text(alphabet=characters(min_codepoint=32, max_codepoint=126), min_size = 1)))
         #hardcode the various SOFA catergories into a list
     else:
-        gff.append(the_type)
+        gff.append(draw(the_type))
 
     if start is None:
         gff.append(str(draw(integers(min_value = 1))))
     else:
-        gff.append(start)
+        gff.append(draw(start))
    
     if end is None:
         gff.append(str(draw(integers(min_value = int(gff[-1])))))
     else:
-        gff.append(end)
+        gff.append(draw(end))
     
     if score is None:
         gff.append(str(draw(floats())))
         #could be a period
     else:
-        gff.append(score)
+        gff.append(draw(score))
 
     if strand is None:
         gff.append((draw(sampled_from(['+', '-']))))
     else:
-        gff.append(strand)
+        gff.append(draw(strand))
 
     if phase is None:
         gff.append((draw(sampled_from(['0', '1', '2', '.']))))
     else:
-        gff.append(phase)
+        gff.append(draw(phase))
 
     if attributes is None:
         gff.append(draw(gff_attributes()))
         #find a way to generate attributes (found in GFF documentation)
     else:
-        gff.append(attributes)
+        gff.append(draw(attributes))
     
     return '\t'.join(gff)
 
@@ -616,35 +626,35 @@ def multiple_gff_entries(draw, fasta = True):
 
     #return commentline + '\n'.join(entries)
 
-@composite
-def add_fasta_to_gff(draw, gff_file):
-    seqids = []
-    fasta_list = []
-    # for line in gff_file.split('\n'):
-    #     if line.startswith('#'):
-    #         continue
-    #     seqids.append(line.split('\t')[0])
-    # print(seqids)
-    # for seqid in set(seqids):
-    #    #fasta = draw(fasta_entry(comment_source = just(seqid)))
-    #    fasta = ""
-    #    fasta_list.append(fasta)
-    return '##FASTA' + '\n'.join(fasta_list)
+#@composite
+# def add_fasta_to_gff(draw, gff_file):
+#     seqids = []
+#     fasta_list = []
+#     # for line in gff_file.split('\n'):
+#     #     if line.startswith('#'):
+#     #         continue
+#     #     seqids.append(line.split('\t')[0])
+#     # print(seqids)
+#     # for seqid in set(seqids):
+#     #    #fasta = draw(fasta_entry(comment_source = just(seqid)))
+#     #    fasta = ""
+#     #    fasta_list.append(fasta)
+#     return '##FASTA' + '\n'.join(fasta_list)
 
-@given(multiple_gff_entries())
-def test_multiple_gff_entries(gff_file):
-    #print(gff_file)
-    #assert gff_file.count('>') < 5
-    assert len(gff_file) < 50
+# @given(multiple_gff_entries())
+# def test_multiple_gff_entries(gff_file):
+#     #print(gff_file)
+#     assert gff_file.count('/n') < 5
+#     #assert len(gff_file) < 50
 
-#@given(gff_entry())
-#def test_gff(gff_entry):
-#   print(gff_entry)
-#   assert gff_entry.count('=') < 3
+@given(gff_entry())
+def test_gff(gff_entry):
+  print(gff_entry)
+  assert gff_entry.count('=') < 3
    
 
 #given seqid, find the largest sequence end (minimum should be defaulted to this largest feature stop coordinate of this largest sequence)
-
+#documentation, polishing, editing, testing, naming
 
 
 

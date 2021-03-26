@@ -13,3 +13,4 @@ from .fasta import *
 from .fastq import *
 from .sequence_identifiers import *
 from .sequences import *
+from .gff import *
